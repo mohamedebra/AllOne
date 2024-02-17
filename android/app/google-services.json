@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1061899021148",
+    "firebase_url": "https://allone-409417-default-rtdb.firebaseio.com",
+    "project_id": "allone-409417",
+    "storage_bucket": "allone-409417.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061899021148:android:96a3685642292f7c0fef99",
+        "android_client_info": {
+          "package_name": "com.example.allone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061899021148-vbn5d6i6nkri97g9qrnuvmgj1trvqrku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.allone",
+            "certificate_hash": "310a180c5fbaeda6da4acfa05cbd30b0935fecdc"
+          }
+        },
+        {
+          "client_id": "1061899021148-uvm5p05hp5k6tstotc2uembdsp1pn6b5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1kYwoRh9Q5gWYCERmIC6e-UiWB9q7TZ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061899021148-ct08ktu20n0278f6q9vgmofi0b3vhfij.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1061899021148-36aej1l8b8iqb7ipr9hesnqre40qmtkc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.allOne"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

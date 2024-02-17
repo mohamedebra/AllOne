@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1061899021148-36aej1l8b8iqb7ipr9hesnqre40qmtkc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1061899021148-36aej1l8b8iqb7ipr9hesnqre40qmtkc</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1061899021148-63sqhdv1kkok6dm76qqqpvcoagj954ac.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBcgkb7zHps4-SPZgmFanb5v83rQjJAwdI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1061899021148</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.allOne</string>
+	<key>PROJECT_ID</key>
+	<string>allone-409417</string>
+	<key>STORAGE_BUCKET</key>
+	<string>allone-409417.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1061899021148:ios:91f025fe74aba7650fef99</string>
+	<key>DATABASE_URL</key>
+	<string>https://allone-409417-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
