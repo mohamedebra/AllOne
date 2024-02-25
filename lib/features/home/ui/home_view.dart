@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../logic/home_cubit.dart';
 
 class HomeView extends StatefulWidget {
@@ -26,8 +25,7 @@ class _HomeViewState extends State<HomeView> {
   }
   @override
   Widget build(BuildContext context) {
-    PersistentTabController controller =
-        PersistentTabController(initialIndex: 0);
+
 
     return BlocProvider(
         create: (BuildContext context) => HomeCubit(TypesRepo(ApiService(Dio())))..fetchTypes(),

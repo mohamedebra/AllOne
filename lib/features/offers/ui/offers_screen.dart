@@ -5,6 +5,7 @@ import 'package:all_one/features/home/logic/product_cuibt/product_cuibt_cubit.da
 import 'package:all_one/features/home/logic/product_cuibt/product_cuibt_state.dart';
 import 'package:all_one/features/offers/ui/widgets/app_bar_screen.dart';
 import 'package:all_one/features/offers/ui/widgets/body_offers.dart';
+import 'package:api_cache_manager/utils/cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -13,25 +14,12 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../controller/offers_controoler.dart';
 import '../../../core/helper/chache_helper.dart';
 import '../../../core/theming/colors.dart';
 import '../../../core/theming/styles.dart';
-import '../../../core/wedgits/app_text_form_field.dart';
-import '../../../core/wedgits/error.dart';
-import '../../../core/wedgits/loading_coustom_all_view.dart';
-import '../../home/data/model/model_products.dart';
 import '../../home/data/model/product_offer.dart';
-import '../../home/data/repo/Product_repo.dart';
-import '../../home/data/repo/repo_types.dart';
 import '../../home/ui/wedgits/details_product.dart';
-import '../data/model/city_model.dart';
 import '../data/model/model_country.dart';
-import '../data/repo/offer_repo.dart';
-import '../logic/offers_cubit.dart';
-import '../logic/offers_screen_contrroler.dart';
-import '../logic/offers_state.dart';
 import 'package:http/http.dart' as http;
 
 class Offers extends StatefulWidget {
@@ -95,6 +83,7 @@ class _OffersState extends State<Offers> {
       setState(() {
         isLoading = true;
       });
+      var isCache = await APICacheManager().isAPICacheKeyExist("Api_Product");
       http.Response response =
       await http.get(Uri.tryParse('http://app.misrgidda.com/api/items')!);
       if (response.statusCode == 200) {
@@ -138,7 +127,7 @@ class _OffersState extends State<Offers> {
           print('//////////////allProducts////////// ${allProducts[1].title}');
           return response.body;
         } else {
-          throw Exception('Failed to save data');
+          return response.body;
         }
 
 

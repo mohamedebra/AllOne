@@ -3,10 +3,6 @@ import 'package:all_one/features/setting/data/setting_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../core/helper/lang_cache_helper.dart';
 
 

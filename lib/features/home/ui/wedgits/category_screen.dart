@@ -14,7 +14,6 @@ import '../../../../core/wedgits/error.dart';
 import '../../../../core/wedgits/loding.dart';
 import '../../../../core/wedgits/loding_category.dart';
 import '../../data/model/model.dart';
-import '../../data/model/model_products.dart';
 import '../../data/model/model_types.dart';
 import '../../data/repo/repo_types.dart';
 

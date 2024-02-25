@@ -1,8 +1,5 @@
 import 'package:all_one/core/networks/api_error_hander.dart';
 import 'package:all_one/core/networks/api_service.dart';
-import 'package:all_one/features/home/data/model/model_products.dart';
-
-
 import '../../../../../core/networks/api_result.dart';
 import '../../../home/data/model/model_types.dart';
 import '../../../home/data/model/product_offer.dart';

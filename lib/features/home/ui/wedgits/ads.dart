@@ -28,8 +28,7 @@ class _AdsState extends State<Ads> {
   @override
   Widget build(BuildContext context) {
     var controllerAds = Get.put(AdsController());
-    final lang = CacheHelper.getData(key: 'lang');
-
+    final lang = CacheHelper.getData(key: 'lang') ?? 'en';
 
     return BlocBuilder<AdsCubit,AdsState>(
         builder: (context,state){
@@ -44,8 +43,19 @@ class _AdsState extends State<Ads> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
                 itemBuilder: (context,index){
+                  String title = state.adsModel.data![index].translations!
+                      .firstWhere(
+                        (title) => title.locale!.endsWith(lang),
+                  )
+                      .title?? '';
+                  String description = state.adsModel.data![index].translations!
+                      .firstWhere(
+                        (title) => title.locale!.endsWith(lang),
+                  )
+                      .description ?? '';
               if(state.adsModel.data![index].visible == 1) {
                 if(context.read<AdsCubit>().isClose == true) {
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 60),
                     child: Row(
@@ -75,7 +85,7 @@ class _AdsState extends State<Ads> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 7),
                                             child: Text(
-                                              '${state.adsModel.data![index].title}',
+                                              title,
                                               style: GoogleFonts.cabin(
                                                   textStyle:
                                                   TextStyles.font16WhiteMedium),
@@ -89,7 +99,7 @@ class _AdsState extends State<Ads> {
                                               MediaQuery.sizeOf(context).width /
                                                   2,
                                               child: Text(
-                                                '${state.adsModel.data![index].description}',
+                                                description,
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: GoogleFonts.cabin(

@@ -122,6 +122,9 @@ class _HomeScreenState extends State<HomeScreen> {
         if(state is ProductLoading ){
           return const Center(child: CircularProgressIndicator());
         }
+        if(state is ProductError){
+          return noInternet();
+        }
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: Scaffold(
@@ -372,25 +375,12 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               // You can also check the internet connection through this below function as well
               ConnectivityResult result = await Connectivity().checkConnectivity();
+             await onRefresh();
               print(result.toString());
             },
             child: const Text("Refresh"),
           ),
         ],
-      ),
-    );
-  }
-  Widget buildBody(name) {
-    return const Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              // Your existing UI components
-              // ...
-            ],
-          ),
-        ),
       ),
     );
   }

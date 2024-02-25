@@ -1,5 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+// import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 
 Future<void> requestPermissionNotification() async {
@@ -21,7 +21,7 @@ void fanNotification() {
     print(
         '=========================================Notification===============================');
     print(message.notification!.title);
-    FlutterRingtonePlayer().playNotification();
+    // FlutterRingtonePlayer().playNotification();
     Get.snackbar(message.notification!.title!, message.notification!.body!);
   });
 }

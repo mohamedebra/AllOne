@@ -1,5 +1,4 @@
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:all_one/core/networks/api_service.dart';
 import 'package:all_one/features/home/data/test.dart';
 import 'package:dio/dio.dart';
@@ -26,7 +25,7 @@ class MyServices extends GetxService {
     );
 
     // Admob initialize
-    Admob.initialize();
+    // Admob.initialize();
     // SharedPreferences init
    await CacheHelper.init();
 

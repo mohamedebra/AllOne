@@ -1,4 +1,3 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:all_one/core/helper/extensions.dart';
 import 'package:all_one/core/wedgits/app_localization.dart';
 import 'package:all_one/features/home/data/model/model.dart';
@@ -11,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:native_ads_flutter/native_ads.dart';
 import '../../../../core/helper/ads_manager.dart';
 import '../../../../core/helper/chache_helper.dart';
 import '../../../../core/helper/spacing.dart';
@@ -20,7 +18,6 @@ import '../../../../core/theming/styles.dart';
 import '../../../../core/wedgits/error.dart';
 import '../../../../core/wedgits/loding.dart';
 import '../../../../core/wedgits/loding_category.dart';
-import '../../data/model/model_products.dart';
 
 class Categories extends StatefulWidget {
   const Categories({super.key});
@@ -32,6 +29,7 @@ class Categories extends StatefulWidget {
 class _CategoriesState extends State<Categories> {
 
   final lang = CacheHelper.getData(key: 'lang') ?? 'en';
+  final types = CacheHelper.getData(key: 'types');
 
 
   @override
@@ -53,7 +51,6 @@ class _CategoriesState extends State<Categories> {
 
           ],
         ),
-
         BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
             if (state is TypesLoading) {
@@ -102,6 +99,8 @@ class _CategoriesState extends State<Categories> {
             return Container(height: 40,); // Fallback
           },
         ),
+
+
       ],
     );
   }

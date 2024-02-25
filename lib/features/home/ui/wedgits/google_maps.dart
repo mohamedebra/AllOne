@@ -9,9 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import '../../../../core/helper/loction_map.dart';
 import '../../data/model/model.dart';
 import 'dart:ui' as ui;
@@ -19,13 +16,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:screenshot/screenshot.dart';
 
-import '../../data/model/model_products.dart';
 
 class GoogleMapScreen extends StatefulWidget {
 
    GoogleMapScreen({super.key,required this.dataProduct});
 
-   ProductOffers? dataProduct;
+   List<DataProduct>? dataProduct;
 
   @override
   State<GoogleMapScreen> createState() => GoogleMapScreenState();
@@ -89,7 +85,6 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
     );
   }
 
-  FloatingSearchBarController controller = FloatingSearchBarController();
   var progressIndicator = false;
   var isTimeAndDistanceVisible = false;
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -104,72 +99,8 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
 
 
 
-  Widget buildFloatingSearchBar() {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return FloatingSearchBar(
-      controller: controller,
-      elevation: 6,
-      hintStyle: TextStyle(fontSize: 18),
-      queryStyle: TextStyle(fontSize: 18),
-      hint: 'Find a place..',
-      border: BorderSide(style: BorderStyle.none),
-      margins: EdgeInsets.fromLTRB(20, 70, 20, 0),
-      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-      height: 52,
-      iconColor: Colors.blue,
-      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-      transitionDuration: const Duration(milliseconds: 600),
-      transitionCurve: Curves.easeInOut,
-      physics: const BouncingScrollPhysics(),
-      axisAlignment: isPortrait ? 0.0 : -1.0,
-      openAxisAlignment: 0.0,
-      width: isPortrait ? 600 : 500,
-      debounceDelay: const Duration(milliseconds: 500),
-      progress: progressIndicator,
-      onQueryChanged: (query) {
-        // getPlacesSuggestions(query);
-      },
-      onFocusChanged: (_) {
-        // hide distance and time row
-        setState(() {
-          isTimeAndDistanceVisible = false;
-        });
-      },
-      transition: CircularFloatingSearchBarTransition(),
-      actions: [
-        FloatingSearchBarAction(
-          showIfOpened: false,
-          child: CircularButton(
-              icon: Icon(Icons.place, color: Colors.black.withOpacity(0.6)),
-              onPressed: () {}),
-        ),
-      ],
-      builder: (context, transition) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // buildSuggestionsBloc(),
-              // buildSelectedPlaceLocationBloc(),
-              // buildDiretionsBloc(),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
-  // Future<void> goToMySearchedForLocation() async {
-  //   buildCameraNewPosition();
-  //   final GoogleMapController controller = await _mapController.future;
-  //   controller
-  //       .animateCamera(CameraUpdate.newCameraPosition(goToSearchedForPlace));
-  //   buildSearchedPlaceMarker();
-  // }
 
   Future<void> _goToMyCurrentLocation() async {
     final GoogleMapController controller = await _controller.future;
@@ -183,13 +114,13 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
     super.initState();
   }
 
-  Future<void> _loadMarker() async {
-    Marker customMarker = await createCustomMarker(
-        'markerId1', LatLng(markerTest[0].lati!, markerTest[0].lang!));
-    setState(() {
-      markers.add(customMarker);
-    });
-  }
+  // Future<void> _loadMarker() async {
+  //   Marker customMarker = await createCustomMarker(
+  //       'markerId1', LatLng(markerTest[0].lati!, markerTest[0].lang!));
+  //   setState(() {
+  //     markers.add(customMarker);
+  //   });
+  // }
   Future<void> _loadMarkers() async {
     final BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(size: Size(10, 10)), // Size of the custom icon
@@ -209,7 +140,7 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   Future<void> _addMarkers() async {
-    for(DataProduct obj in widget.dataProduct!.data!)
+    for(DataProduct obj in widget.dataProduct!!)
 
       {
         String? imageUrl = obj.files

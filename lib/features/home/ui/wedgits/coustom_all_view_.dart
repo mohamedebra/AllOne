@@ -1,5 +1,3 @@
-import 'package:all_one/core/helper/extensions.dart';
-import 'package:all_one/core/wedgits/loding_category.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,13 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/helper/chache_helper.dart';
-import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/styles.dart';
 import '../../../../core/wedgits/error.dart';
 import '../../../../core/wedgits/loading_coustom_all_view.dart';
-import '../../../../core/wedgits/loding.dart';
-import '../../data/model/model_products.dart';
-import '../../data/model/model_types.dart';
 import '../../data/model/product_offer.dart';
 import '../../logic/product_cuibt/product_cuibt_cubit.dart';
 import '../../logic/product_cuibt/product_cuibt_state.dart';

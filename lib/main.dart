@@ -1,4 +1,3 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:all_one/core/helper/chache_helper.dart';
 import 'package:all_one/core/routing/app_router.dart';
 import 'package:all_one/my_app.dart';
@@ -18,13 +17,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
 
-
-
-
-
   runApp(MyApp(
     appRouter: AppRouter(),
   ));
+
 }
 
 //  final GoogleMapsFlutterPlatform mapsImplementation =

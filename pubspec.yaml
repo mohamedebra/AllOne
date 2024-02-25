@@ -56,13 +56,13 @@ dependencies:
   #localization
 
   # for splash
-  flutter_native_splash: ^2.3.8
+#  flutter_native_splash: ^2.3.8
   #  An SVG rendering and widget library for Flutter
   flutter_svg: ^2.0.9
 
   flutter_screenutil: ^5.9.0
   #  highly customizable persistent/static bottom navigation bar for flutter.
-  persistent_bottom_nav_bar: ^5.0.2
+#  persistent_bottom_nav_bar: ^5.0.2
   #  A custom switch
   #  flutter_switch: ^0.3.2
   shared_preferences: ^2.2.2
@@ -73,20 +73,20 @@ dependencies:
   #  view_google_maps
   google_maps_flutter: ^2.5.0
   google_maps_flutter_android: ^2.6.0
-  flutter_polyline_points: ^2.0.0
+#  flutter_polyline_points: ^2.0.0
   geolocator: ^10.1.0
-  uuid: ^4.2.1
-  material_floating_search_bar_2: ^0.5.0
+#  uuid: ^4.2.1
+#  material_floating_search_bar_2: ^0.5.0
 
   #Admob plugin that shows banner ads using native platform views.
-  admob_flutter: ^3.0.0
-  native_ads_flutter: ^1.0.7
+#  admob_flutter: ^3.0.0
+#  native_ads_flutter: ^1.0.7
   # a cross-platform messaging solution that lets you reliably deliver messages on Android and iOS.
   firebase_messaging: ^14.7.10
   firebase_core: ^2.24.2
   get: ^4.6.6
   #  A simple player for system default ringtones, alarms and notifications
-  flutter_ringtone_player: ^4.0.0+2
+#  flutter_ringtone_player: ^4.0.0+2
   badges: ^3.1.2
   jiffy: ^6.2.1
   # Social Authentication
@@ -103,13 +103,17 @@ dependencies:
   flutter_dialogs: ^3.0.0
   collection: ^1.18.0
   flutter_platform_widgets: ^6.0.2
-  permission_handler: ^11.2.0
+#  permission_handler: ^11.2.0
 #  flutter_cache_manager: ^3.3.1
   screenshot: ^2.1.0
   shimmer: ^3.0.0
   connectivity_plus: ^5.0.2
-  data_filters: ^1.0.2
+#  data_filters: ^1.0.2
 #  dio_cache_interceptor: ^3.5.0
+  api_cache_manager: ^1.0.1
+  path_provider: ^2.1.2
+  sqflite: ^2.3.2
+
 
 
 

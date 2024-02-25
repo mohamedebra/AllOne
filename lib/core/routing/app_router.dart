@@ -1,10 +1,8 @@
 
-import 'dart:ffi';
 
 import 'package:all_one/core/routing/routes.dart';
 import 'package:all_one/features/auth/login/ui/wedgits/forgt_password.dart';
 import 'package:all_one/features/home/data/model/model.dart';
-import 'package:all_one/features/home/data/model/model_products.dart';
 import 'package:all_one/features/home/data/model/product_offer.dart';
 import 'package:all_one/features/home/ui/wedgits/category_screen.dart';
 import 'package:all_one/features/home/ui/wedgits/details_product.dart';

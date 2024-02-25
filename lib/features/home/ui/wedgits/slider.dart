@@ -85,7 +85,7 @@ class SliderAppBar extends StatelessWidget {
                         buttonText: "find_nearby".tr,
                         textStyle: TextStyles.font14BlueSemiBold,
                         onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>  GoogleMapScreen(dataProduct: state.productOffers,)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>  GoogleMapScreen(dataProduct: state.productOffers.data,)));
                         }
                     )
                   ],

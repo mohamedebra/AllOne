@@ -13,11 +13,19 @@ class DetailsProduct extends StatelessWidget {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
 
   DetailsProduct({super.key, required this.productItems,});
+  final lang = CacheHelper.getData(key: 'lang') ?? 'en';
+
 
   @override
   Widget build(BuildContext context) {
     // Assuming `title` contains the special title you want to display.
-    String changeLang = productItems.title!;
+    // String changeLang = productItems.title!;
+    String changeLang =
+        productItems.translations!
+            .firstWhere(
+              (title) => title.locale!.endsWith(lang),
+        )
+            .title ?? '';
     String imageUrl = productItems.files
         ?.firstWhere(
             (file) =>
