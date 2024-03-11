@@ -33,36 +33,36 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.6
   cached_network_image: ^3.3.1
   #  A build system for Dart code generation and modular compilation.
   build_runner: ^2.4.7
   #  state management
-  flutter_bloc: ^8.1.3
+  flutter_bloc: ^8.1.4
   #  code generation
-  freezed: ^2.4.6
+  freezed: ^2.4.7
   freezed_annotation: ^2.4.1
   #  for depandency injection
-  get_it: ^7.6.4
+  get_it: ^7.6.7
   #  Automatically generate code for converting to and from JSON by annotating Dart classes.
   json_serializable: ^6.7.1
   json_annotation: ^4.8.1
   # Networking.
-  dio: ^5.4.0
-  retrofit: ^4.0.3
-  retrofit_generator: ^8.0.6
+  dio: ^5.4.1
+  retrofit: ^4.1.0
+  retrofit_generator: ^8.1.0
   pretty_dio_logger: ^1.3.1
 #  locale
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-
+  intl: ^0.18.1
 
   #localization
 
   # for splash
 #  flutter_native_splash: ^2.3.8
   #  An SVG rendering and widget library for Flutter
-  flutter_svg: ^2.0.9
+  flutter_svg: ^2.0.10+1
 
   flutter_screenutil: ^5.9.0
   #  highly customizable persistent/static bottom navigation bar for flutter.
@@ -73,10 +73,10 @@ dependencies:
   #  change_lang
   flutter_localization: ^0.2.0
   #  view_pdf
-  syncfusion_flutter_pdfviewer: ^24.1.41
+  syncfusion_flutter_pdfviewer: ^24.2.5
   #  view_google_maps
   google_maps_flutter: ^2.5.0
-  google_maps_flutter_android: ^2.6.0
+  google_maps_flutter_android: ^2.7.0
 #  flutter_polyline_points: ^2.0.0
   geolocator: ^11.0.0
   geocoding: ^2.2.0
@@ -87,35 +87,35 @@ dependencies:
 #  admob_flutter: ^3.0.0
 #  native_ads_flutter: ^1.0.7
   # a cross-platform messaging solution that lets you reliably deliver messages on Android and iOS.
-  firebase_messaging: ^14.7.10
-  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.17
+  firebase_core: ^2.27.0
   get: ^4.6.6
   #  A simple player for system default ringtones, alarms and notifications
 #  flutter_ringtone_player: ^4.0.0+2
   badges: ^3.1.2
-  jiffy: ^6.2.1
+#  jiffy: ^6.2.2
   # Social Authentication
   google_sign_in: ^6.2.1
   google_sign_in_android: ^6.1.21
-  firebase_ui_auth: ^1.12.1
-  firebase_auth: ^4.16.0
-  flutter_facebook_auth: ^6.0.3
-  sign_in_with_apple: ^5.0.0
+  firebase_ui_auth: ^1.13.0
+  firebase_auth: ^4.17.8
+  flutter_facebook_auth: ^6.1.1
+  sign_in_with_apple: ^6.0.0
   crypto: ^3.0.3
   dropdown_button2: ^2.3.9
 
-  google_fonts: ^6.1.0
+  google_fonts: ^6.2.1
   flutter_dialogs: ^3.0.0
   collection: ^1.18.0
-  flutter_platform_widgets: ^6.0.2
+  flutter_platform_widgets: ^6.1.0
 #  permission_handler: ^11.2.0
 #  flutter_cache_manager: ^3.3.1
   screenshot: ^2.1.0
   shimmer: ^3.0.0
-  connectivity_plus: ^5.0.2
+  connectivity_plus: ^5.0.1
 #  data_filters: ^1.0.2
 #  dio_cache_interceptor: ^3.5.0
-  api_cache_manager: ^1.0.1
+  api_cache_manager: ^1.0.2
   path_provider: ^2.1.2
   sqflite: ^2.3.2
   flutter_phone_direct_caller: ^2.1.1
