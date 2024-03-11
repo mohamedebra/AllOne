@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class AdsControflller extends GetxController{
+class AdsController extends GetxController{
   bool isClose = true;
 
   void changeCloseTrue(){
