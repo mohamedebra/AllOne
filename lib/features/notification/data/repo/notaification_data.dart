@@ -8,7 +8,7 @@ class NoteRepo{
   final ApiService apiService;
   NoteRepo(this.apiService);
 
-  Future<ApiResult<ProductOffers>> getProduct() async {
+  Future<ApiResult<ProductOffersA>> getProduct() async {
     // try {
     //   final product = await apiService.getItems();
     //   print(product);

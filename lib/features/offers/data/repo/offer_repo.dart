@@ -12,21 +12,6 @@ class OfferRepo{
 
 
 
-  Future<ApiResult<ProductOffers>> getProduct() async {
-    // try {
-    //   final product = await apiService.getItems();
-    //   print(product);
-    //   return ApiResult.success(product);
-    // } catch (error) {
-    //   return ApiResult.failure(ErrorHandler.handle(error));
-    // }
-    try {
-      final response = await apiService.getItems(); // Ensure this returns List<Post>
-      return ApiResult.success(response);
-    } catch (error) {
-      return ApiResult.failure(ErrorHandler.handle(error));
-    }
-  }
   Future<ApiResult<CountryApi>> getCountry() async {
     try {
       final response = await apiService.getCountry(); // Ensure this returns List<Post>

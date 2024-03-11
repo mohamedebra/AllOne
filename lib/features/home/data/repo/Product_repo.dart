@@ -11,23 +11,14 @@ class ProductRepo{
   final ApiService apiService;
   ProductRepo(this.apiService);
 
-  Future<ApiResult<ProductOffers>> getProduct() async {
-    // try {
-    //   final product = await apiService.getItems();
-    //   print(product);
-    //   return ApiResult.success(product);
-    // } catch (error) {
-    //   return ApiResult.failure(ErrorHandler.handle(error));
-    // }
+  Future<ApiResult<ProductOffers>> getProduct({int page = 1, int limit = 10}) async {
     try {
-      final response = await apiService.getItems(); // Ensure this returns List<Post>
+      final response = await apiService.getItems(page, limit);
 
       return ApiResult.success(response);
-
     } catch (error) {
       return ApiResult.failure(ErrorHandler.handle(error));
     }
   }
-
 
 }

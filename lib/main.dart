@@ -1,13 +1,10 @@
-import 'package:all_one/core/helper/chache_helper.dart';
+
 import 'package:all_one/core/routing/app_router.dart';
 import 'package:all_one/my_app.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'core/DI/dependency_injection.dart';
 import 'core/fanction/fanction.dart';
 import 'core/services/services.dart';
-import 'firebase_options.dart';
 
 void main() async {
   // dart run build_runner build --delete-conflicting-outputs
@@ -17,10 +14,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
 
-  runApp(MyApp(
-    appRouter: AppRouter(),
-  ));
+  runApp(
+    // DevicePreview(
+    //   enabled: true,
+    //   builder: (context) =>  ;
 
+        MyApp(
+        appRouter: AppRouter(),
+  ) );
 }
 
 //  final GoogleMapsFlutterPlatform mapsImplementation =

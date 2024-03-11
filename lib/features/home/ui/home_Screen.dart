@@ -5,12 +5,15 @@ import 'package:all_one/features/home/logic/product_cuibt/product_cuibt_cubit.da
 import 'package:all_one/features/home/ui/wedgits/ads.dart';
 import 'package:all_one/features/home/ui/wedgits/categories.dart';
 import 'package:all_one/features/home/ui/wedgits/coustom_all_view_.dart';
+import 'package:all_one/features/home/ui/wedgits/details_product.dart';
+import 'package:all_one/features/home/ui/wedgits/goggle_maps_product.dart';
 import 'package:all_one/features/home/ui/wedgits/slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -25,9 +28,11 @@ import '../../../core/theming/colors.dart';
 import '../../../core/theming/styles.dart';
 import '../../../core/wedgits/error.dart';
 import '../../../core/wedgits/loading_ads.dart';
+import '../../../core/wedgits/loading_coustom_all_view.dart';
 import '../../../core/wedgits/loding.dart';
 import '../../../core/wedgits/loding_category.dart';
 import '../data/model/ads/ads_model.dart';
+import '../data/model/product_offer.dart';
 import '../data/repo/Product_repo.dart';
 import '../logic/ads_cubit/ads_cubit.dart';
 import '../logic/home_cubit.dart';
@@ -43,10 +48,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late bool isConnected;
   bool isClose = true;
+  ScrollController scrollController = ScrollController();
+
 
   Future onRefresh() async {
     BlocProvider.of<HomeCubit>(context).fetchTypes();
-    BlocProvider.of<ProductCuibtCubit>(context).fetchProduct();
+    BlocProvider.of<ProductCuibtCubit>(context).resetAndFetchProduct();
     BlocProvider.of<AdsCubit>(context).fetchAds();
     setState(() {
       isClose = true;
@@ -77,9 +84,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     onRefresh();
+    scrollController.addListener(() {
+      scroll();
+    });
     super.initState();
   }
-  Widget buildProductImage(DataAds product) {
+  Widget buildProductImageAds(DataAds product) {
     // Find the first image file that is an actual image (ignoring non-image files).
 
     // String? imageUrl = product.files?.firstWhere(
@@ -112,6 +122,61 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return Container();
   }
+  Widget buildProductImage(DataProduct product) {
+    // Find the first image file that is an actual image (ignoring non-image files).
+
+    // String? imageUrl = product.files?.firstWhere(
+    //       (file) => file.image!.endsWith('.jpg') || file.image!.endsWith('.jpeg') || file.image!.endsWith('.png'),
+    //   orElse: () => null, // Use orElse to handle the case when no valid image is found.
+    //
+    // ).image;
+    String? imageUrl = product.files
+        ?.firstWhere(
+            (file) =>
+        file.image!.endsWith('.jpg') ||
+            file.image!.endsWith('.jpeg') ||
+            file.image!.endsWith('.png'),
+        orElse: () => Files(
+            fileType:
+            'asstes/images/2.jpg') // Use orElse to handle the case when no valid image is found.
+    )
+        .image;
+
+    // Check if an image URL was found and is not null.
+    if (imageUrl != null) {
+      // Complete the URL if necessary (if the stored URL is relative).
+      String fullImageUrl = 'http://app.misrgidda.com$imageUrl';
+
+      // Return an Image widget to display the image.
+      // return Image(image: NetworkImage(fullImageUrl),fit: BoxFit.cover,);
+      return CachedNetworkImage(
+        fit: BoxFit.fill,
+        imageUrl: fullImageUrl,
+        errorWidget: (context, url, error) => const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error, color: Colors.red),
+            Text('Failed to load image'),
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+  void callNumber(DataProduct product) async {
+    String number = product.weight!; //set the number here
+    await FlutterPhoneDirectCaller.callNumber(number!);
+  }
+
+  scroll() {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      BlocProvider.of<ProductCuibtCubit>(context).loadNextPage();
+    }
+  }
+
+  final lang = CacheHelper.getData(key: 'lang') ?? 'en';
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,9 +184,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return BlocBuilder<ProductCuibtCubit,ProductCuibtState>(
       builder: (BuildContext context, ProductCuibtState state) {
-        if(state is ProductLoading ){
-          return const Center(child: CircularProgressIndicator());
-        }
+        // if(state is ProductLoading ){
+        //   return const Center(child: CircularProgressIndicator());
+        // }
         if(state is ProductError){
           return noInternet();
         }
@@ -130,118 +195,123 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Scaffold(
               body: SafeArea(
                 child: SingleChildScrollView(
+                  controller: scrollController,
                   child: Stack(
                     children: [
                       // const AdsMob(),
                       BlocBuilder<AdsCubit,AdsState>(
                           builder: (context,state){
                             if(state is AdsLoading){
-                              return const LoadingCategory();
+                              return const LoadingAds();
                             }
                             if(state is AdsSuccess){
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 70),
-                                child: SizedBox(
-                                  height: 75,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context,index){
-                                      if(state.adsModel.data![index].visible == 1) {
-                                        if(isClose == true) {
-                                          return Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Stack(
-                                                children: [
-                                                  Column(
-                                                    children: [
-                                                      const SizedBox(
-                                                        height: 2,
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 70,
-                                                            child: buildProductImage(state.adsModel.data![index]),
-                                                          ),
-                                                          Container(
-                                                            color: Colors.grey[700],
-                                                            height: 70,
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.symmetric(
-                                                                      horizontal: 7),
+                              return SizedBox(
+                                height: 120.h,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context,index){
+                                    if(state.adsModel.data![index].visible == 1) {
+                                      String title = state.adsModel.data![index].translations!
+                                          .firstWhere(
+                                            (title) => title.locale!.endsWith(lang),
+                                      )
+                                          .title?? '';
+                                      String description = state.adsModel.data![index].translations!
+                                          .firstWhere(
+                                            (title) => title.locale!.endsWith(lang),
+                                      )
+                                          .description ?? '';
+                                      if(isClose == true) {
+                                        return Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 70.h,
+                                                          child: buildProductImageAds(state.adsModel.data![index]),
+                                                        ),
+                                                        Container(
+                                                          color: Colors.grey[700],
+                                                          height: 75.h,
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              Padding(
+                                                                padding:  EdgeInsets.symmetric(
+                                                                    horizontal: 7.w),
+                                                                child: Text(
+                                                                  title,
+                                                                  style: GoogleFonts.cabin(
+                                                                      textStyle:
+                                                                      TextStyles.font16WhiteMedium),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:  EdgeInsets.symmetric(
+                                                                    horizontal: 7.w),
+                                                                child: SizedBox(
+                                                                  width:
+                                                                  MediaQuery.sizeOf(context).width /
+                                                                      2,
                                                                   child: Text(
-                                                                    '${state.adsModel.data![index].title}',
+                                                                    description,
+                                                                    maxLines: 2,
+                                                                    overflow: TextOverflow.ellipsis,
                                                                     style: GoogleFonts.cabin(
                                                                         textStyle:
-                                                                        TextStyles.font16WhiteMedium),
+                                                                        TextStyles.font14WhiteMedium),
                                                                   ),
                                                                 ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.symmetric(
-                                                                      horizontal: 7),
-                                                                  child: SizedBox(
-                                                                    width:
-                                                                    MediaQuery.sizeOf(context).width /
-                                                                        2,
-                                                                    child: Text(
-                                                                      '${state.adsModel.data![index].description}',
-                                                                      maxLines: 2,
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      style: GoogleFonts.cabin(
-                                                                          textStyle:
-                                                                          TextStyles.font14WhiteMedium),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    width: MediaQuery.sizeOf(context).width / 1.07,
-                                                    child: Align(
-                                                      alignment: Alignment.topRight,
-                                                      child: CircleAvatar(
-                                                        radius: 12,
-                                                        backgroundColor: ColorsManager.lighterGray,
-                                                        child: IconButton(
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                 isClose = false;
-
-                                                              });
-                                                              print('isClose: ${context.read<AdsCubit>().isClose}');
-
-                                                            },
-                                                            icon: SvgPicture.asset(
-                                                                'asstes/svgs/211652_close_icon.svg')),
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                        else{
-                                          return const SizedBox();
-                                        }
-                                      }
-                                      if(state.adsModel.data![index].visible == 0) {
-                                        return  const SizedBox();
-                                      }
-                                    },
-                                    itemCount: state.adsModel.data!.length,
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: MediaQuery.sizeOf(context).width / 1.07,
+                                                  child: Align(
+                                                    alignment: Alignment.topRight,
+                                                    child: CircleAvatar(
+                                                      radius: 12.h,
+                                                      backgroundColor: ColorsManager.lighterGray,
+                                                      child: IconButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                               isClose = false;
 
-                                  ),
+                                                            });
+                                                            print('isClose: ${context.read<AdsCubit>().isClose}');
+
+                                                          },
+                                                          icon: SvgPicture.asset(
+                                                              'asstes/svgs/211652_close_icon.svg',)),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      else{
+                                        return const SizedBox();
+                                      }
+                                    }
+                                    if(state.adsModel.data![index].visible == 0) {
+                                      return  const SizedBox();
+                                    }
+                                  },
+                                  itemCount: state.adsModel.data!.length,
+
                                 ),
                               );
 
@@ -262,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Padding(
                           padding:
-                          isClose  ? EdgeInsets.only(top: 70.h, right: 25.w, left: 25.w) : EdgeInsets.only(top: 10.h, right: 25.w, left: 25.w),
+                          isClose  ? EdgeInsets.only(top: 80.h, right: 20.w, left: 20.w) : EdgeInsets.only(top: 10.h, right: 20.w, left: 20.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -281,6 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           )),
                                     ],
                                   ),
+
                                   badges.Badge(
                                     position: badges.BadgePosition.custom(
                                       bottom: 15,
@@ -314,12 +385,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               verticalSpace(18.h),
                               const SliderAppBar(),
                               const Categories(),
-                              verticalSpace(5.h),
+                              // verticalSpace(5.h),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
+                                    padding:  EdgeInsets.only(bottom: 12.h),
                                     child: Text(
                                       "all_offers".tr,
                                       style: TextStyles.font18BlackMedium,
@@ -327,7 +398,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ],
                               ),
-                              const CustomAllView()
+                              const CustomAllView(),
+                                if(context.read<ProductCuibtCubit>().isLoading)
+                                  const Center(child: CircularProgressIndicator())
 
                               // if(state is ProductSuccess)
                             ],

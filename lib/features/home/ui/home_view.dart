@@ -5,6 +5,7 @@ import 'package:all_one/features/home/logic/home_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../logic/home_cubit.dart';
@@ -49,13 +50,13 @@ class _HomeViewState extends State<HomeView> {
                     },
                     items:  [
                       BottomNavigationBarItem(
-                          icon: SvgPicture.asset('asstes/svgs/icons8-home.svg',color: Colors.black87 ,width: 25,height: 25,), label: 'Home'.tr),
+                          icon: SvgPicture.asset('asstes/svgs/icons8-home.svg',color: Colors.black87 ,width: 25.w,height: 25.h,), label: 'Home'.tr,),
                       BottomNavigationBarItem(
-                          icon: SvgPicture.asset('asstes/svgs/flame-icon.svg',color: Colors.black87,width: 25, height: 25,),
+                          icon: SvgPicture.asset('asstes/svgs/flame-icon.svg',color: Colors.black87,width: 25.w, height: 25.h,),
                           label: 'Offers'.tr,
                       ),
                       BottomNavigationBarItem(
-                          icon: SvgPicture.asset('asstes/svgs/icons8-setting.svg',color: Colors.black87,width: 25, height: 25,),
+                          icon: SvgPicture.asset('asstes/svgs/icons8-setting.svg',color: Colors.black87,width: 25.w, height: 25.h,),
                           label: 'Setting'.tr),
                     ]),
               ),

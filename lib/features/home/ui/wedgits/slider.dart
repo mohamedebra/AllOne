@@ -24,74 +24,145 @@ class SliderAppBar extends StatelessWidget {
     return BlocBuilder<ProductCuibtCubit,ProductCuibtState>(
       builder: (context, state) {
         if (state is ProductLoading) {
-          return SizedBox(
-            height: 100,
+          return  Container(
+            height: 190.h,
+            width: MediaQuery.of(context).size.width *.9,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [
+                    0,
+                    .6,
+                    1
+                  ],
+                  colors: [
+                    Color(0xFFDF98FA),
+                    Color(0xFFB070FD),
+                    Color(0xFFB768A2)
+                  ]),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("catch_up_and_request_your_offers".tr,
+                          style: GoogleFonts.cabin(
+                            textStyle:  TextStyles.font18WhiteSemiBold,
+                          )
+
+                      ),
+                      SizedBox(height: 20.h,),
+                      AppTextButton(
+                          backgroundColor: Colors.white,
+                          buttonWidth: 120,
+                          buttonHeight: 40.h,
+                          verticalPadding: 0,
+                          horizontalPadding: 0,
+                          buttonText: "find_nearby".tr,
+                          textStyle: TextStyles.font14BlueSemiBold,
+                          onPressed: (){
+
+                            // Navigator.push(context, MaterialPageRoute(builder: (context)=>  GoogleMapScreen(dataProduct: state.productOffers,)));
+                          }
+                      )
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                          height: 120.h,
+                          width: 120.w,
+                          child: SvgPicture.asset('asstes/svgs/offer-svgrepo-com.svg')),
+
+                    ],
+                  ),
+                ),
+              ],
+            ),
           );
-        } else if (state is ProductSuccess) {
+        }
+         if (state is ProductSuccess) {
           // Render your list here
-          return  Stack(
-            children: [
-              Container(
-                height: 160.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      stops: [
-                        0,
-                        .6,
-                        1
-                      ],
-                      colors: [
-                        Color(0xFFDF98FA),
-                        Color(0xFFB070FD),
-                        Color(0xFFB768A2)
-                      ]),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20,left: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                        height: 120.h,
-                        width: 120.w,
-                        child: SvgPicture.asset('asstes/svgs/offer-svgrepo-com.svg')),
-                    horizontalSpace(20),
-
+          return   Container(
+            height: 190.h,
+            width: MediaQuery.of(context).size.width *.9,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [
+                    0,
+                    .6,
+                    1
                   ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("catch_up_and_request_your_offers".tr,
-                        style: GoogleFonts.cabin(
-                          textStyle:  TextStyles.font18WhiteSemiBold,
-                        )
+                  colors: [
+                    Color(0xFFDF98FA),
+                    Color(0xFFB070FD),
+                    Color(0xFFB768A2)
+                  ]),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
 
-                    ),
-                    verticalSpace(10.h),
-                    AppTextButton(
-                        buttonWidth: 120,
-                        backgroundColor: Colors.white,
-                        buttonHeight: 40,
-                        verticalPadding: 0,
-                        horizontalPadding: 0,
-                        buttonText: "find_nearby".tr,
-                        textStyle: TextStyles.font14BlueSemiBold,
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>  GoogleMapScreen(dataProduct: state.productOffers.data,)));
-                        }
-                    )
-                  ],
+                Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("catch_up_and_request_your_offers".tr,
+                          style: GoogleFonts.cabin(
+                            textStyle:  TextStyles.font18WhiteSemiBold,
+                          )
+
+                      ),
+                      SizedBox(height: 20.h,),
+                      AppTextButton(
+                          backgroundColor: Colors.white,
+                          buttonWidth: 120,
+                          buttonHeight: 40.h,
+                          verticalPadding: 0,
+                          horizontalPadding: 0,
+                          buttonText: "find_nearby".tr,
+                          textStyle: TextStyles.font14BlueSemiBold,
+                          onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>  GoogleMapScreen(dataProduct: state.productOffers,)));
+                          }
+                      )
+                    ],
+                  ),
                 ),
-              )
-            ],
+
+                Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                          height: 120.h,
+                          width: 120.w,
+                          child: SvgPicture.asset('asstes/svgs/offer-svgrepo-com.svg')),
+
+                    ],
+                  ),
+                ),
+              ],
+            ),
           );
 
         } else if (state is ProductError) {
@@ -104,7 +175,7 @@ class SliderAppBar extends StatelessWidget {
           );
         }
         return Container(
-          height: 40,
+          height: 40.h,
         ); // Fallback
       },
 

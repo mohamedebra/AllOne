@@ -5,8 +5,10 @@ abstract class ProductCuibtState {}
 
 class ProductCuibtInitial extends ProductCuibtState {}
 class ProductLoading extends ProductCuibtState{}
+class PaginationProductLoading extends ProductCuibtState{}
+class Current extends ProductCuibtState{}
 class ProductSuccess extends ProductCuibtState{
-  ProductOffers productOffers;
+  List<DataProduct> productOffers;
   ProductSuccess(this.productOffers);
 }
 class ProductError extends ProductCuibtState{

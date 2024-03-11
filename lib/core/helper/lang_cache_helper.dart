@@ -1,6 +1,4 @@
 import 'package:all_one/core/helper/chache_helper.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalizationController{
   // static changeLocal(BuildContext context){

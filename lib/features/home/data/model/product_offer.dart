@@ -1,17 +1,39 @@
-class ProductOffers {
-  List<DataProduct>? data;
 
+
+class ProductOffers{
+  ProductOffersA? data;
   ProductOffers({this.data});
 
-  factory ProductOffers.fromJson(Map<String, dynamic> json) {
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+
+
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+
+    return data;
+  }
+  factory ProductOffers.fromJson(Map<String, dynamic> json) => ProductOffers(
+    data: json['data'] != null ? ProductOffersA.fromJson(json['data']) : null,
+  );
+
+}
+class ProductOffersA {
+  List<DataProduct>? data;
+
+  ProductOffersA({this.data});
+
+  factory ProductOffersA.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      return ProductOffers(
+      return ProductOffersA(
         data: (json['data'] as List<dynamic>)
             ?.map((e) => DataProduct.fromJson(e))
             ?.toList(),
       );
     } else {
-      return ProductOffers();
+      return ProductOffersA();
     }
   }
 
@@ -29,7 +51,7 @@ class DataProduct {
   int? id;
   Null? sku;
   double? maxCount;
-  Null? weight;
+  String? weight;
   Null? videoUrl;
   Null? videoText;
   Null? shipweight;

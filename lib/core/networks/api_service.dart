@@ -34,8 +34,8 @@ abstract class ApiService {
   Future<Types> getTypes();
 
 
-  @GET(ApiConstants.items)
-  Future<ProductOffers> getItems();
+  @GET(ApiConstants.items,)
+  Future<ProductOffers> getItems(@Query("page") int page, @Query("limit") int limit);
   @GET(ApiConstants.country)
   Future<CountryApi> getCountry();
 
@@ -43,5 +43,5 @@ abstract class ApiService {
   Future<AdsModel> getAds();
 
   @GET(ApiConstants.notification)
-  Future<ProductOffers> getNotification();
+  Future<ProductOffersA> getNotification();
 }

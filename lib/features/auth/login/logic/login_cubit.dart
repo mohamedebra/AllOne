@@ -1,6 +1,7 @@
 
 import 'package:all_one/features/auth/login/data/repo/login_repo.dart';
 import 'package:all_one/features/auth/login/logic/login_state.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,6 +36,7 @@ class LoginCubit extends Cubit<LoginState> {
     response.when(success: (loginResponse){
       CacheHelper.savedata(key: 'loginEmail', value: loginResponse.userData!.email);
       CacheHelper.savedata(key: 'loginName', value: loginResponse.userData!.name);
+      FirebaseMessaging.instance.subscribeToTopic('Users');
       emit(LoginSuccess(loginResponse));
     }, failure: (error){
       emit(LoginError(error.apiErrorModel.message ?? ''));

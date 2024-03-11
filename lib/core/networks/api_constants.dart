@@ -12,6 +12,8 @@ class ApiConstants{
   static const String login = 'user/login';
   static const String register = 'createuser';
 
+  static const String hiveBoxTypes = 'hiveBoxTypes';
+
 
 }
 class ApiErrors {

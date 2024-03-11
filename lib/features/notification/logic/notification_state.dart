@@ -5,7 +5,7 @@ class NotificationState {}
 class NotificationInitial extends NotificationState {}
 class NotificationLoading extends NotificationState {}
 class NotificationLoaded extends NotificationState {
-  ProductOffers productOffersNotification;
+  ProductOffersA productOffersNotification;
   NotificationLoaded(this.productOffersNotification);
 }
 class NotificationError extends NotificationState {

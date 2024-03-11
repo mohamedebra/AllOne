@@ -1,3 +1,5 @@
+import 'package:hive/hive.dart';
+
 class Types {
   List<Data>? data;
 
@@ -23,9 +25,13 @@ class Types {
 
 class Data {
   int? id;
+
   int? sort;
+
   String? title;
+
   Images? image;
+
   List<TranslationLang>? translations;
 
   Data({this.id, this.sort, this.title, this.image, this.translations});
@@ -69,12 +75,12 @@ class Images {
 
   Images(
       {this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.fileId,
-        this.fileType,
-        this.image,
-        this.main});
+      this.createdAt,
+      this.updatedAt,
+      this.fileId,
+      this.fileType,
+      this.image,
+      this.main});
 
   Images.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -101,8 +107,11 @@ class Images {
 
 class TranslationLang {
   int? id;
+
   int? typeId;
+
   String? title;
+
   String? locale;
 
   TranslationLang({this.id, this.typeId, this.title, this.locale});

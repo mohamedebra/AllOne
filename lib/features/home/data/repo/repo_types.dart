@@ -1,5 +1,8 @@
 import 'package:all_one/features/home/data/model/model_types.dart';
+import 'package:hive/hive.dart';
 
+import '../../../../core/fanction/fanction.dart';
+import '../../../../core/networks/api_constants.dart';
 import '../../../../core/networks/api_error_hander.dart';
 import '../../../../core/networks/api_result.dart';
 import '../../../../core/networks/api_service.dart';
@@ -13,8 +16,12 @@ class TypesRepo{
 
   Future<ApiResult<Types>> getTypes() async {
     try {
+
       final types = await apiService.getTypes();
       print(types);
+
+
+
       return ApiResult.success(types);
     } catch (error) {
       return ApiResult.failure(ErrorHandler.handle(error));

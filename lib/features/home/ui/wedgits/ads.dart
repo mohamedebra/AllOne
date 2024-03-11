@@ -27,13 +27,12 @@ class Ads extends StatefulWidget {
 class _AdsState extends State<Ads> {
   @override
   Widget build(BuildContext context) {
-    var controllerAds = Get.put(AdsController());
     final lang = CacheHelper.getData(key: 'lang') ?? 'en';
 
     return BlocBuilder<AdsCubit,AdsState>(
         builder: (context,state){
       if(state is AdsLoading){
-        return const LoadingCategory();
+        return const LoadingAds();
       }
       if(state is AdsSuccess){
         return Padding(

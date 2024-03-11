@@ -13,7 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'core/DI/initialBinding.dart';
 import 'core/locale/locale.dart';
 import 'core/locale/locale_controller.dart';
 import 'core/networks/api_service.dart';
@@ -49,7 +48,6 @@ class MyApp extends StatelessWidget {
           ),
 
           initialRoute: Routes.homeScreen,
-          initialBinding: InitialBinding(),
           onGenerateRoute: appRouter.generateRoute,
           onUnknownRoute: appRouter.generateRoute,
         ),

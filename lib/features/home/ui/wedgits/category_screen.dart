@@ -73,7 +73,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     Expanded(
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
+                          crossAxisCount: 3,
                           childAspectRatio: .3,
                         ),
                         itemBuilder: (context, index) {
@@ -89,9 +89,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               children: [
                                 if (imageUrl != null)
 
-                                  Image.network(imageUrl,width: 33,),
+                                  Image.network(imageUrl,width: 33.w,),
                                 if (imageUrl == null)
-                                  Image.asset('asstes/icons/Error.png',width: 35,),
+                                  Image.asset('asstes/icons/Error.png',width: 35.w,),
                                 verticalSpace(15.h),
                                 Text(changeLang ?? 'no category',style: TextStyles.font13GrayRegular,)
                               ],

@@ -1,4 +1,3 @@
-import 'package:all_one/controller/offers_controoler.dart';
 import 'package:all_one/core/helper/chache_helper.dart';
 import 'package:all_one/core/locale/locale_controller.dart';
 import 'package:all_one/core/routing/routes.dart';
@@ -11,6 +10,8 @@ import 'package:all_one/core/wedgits/app_text_button.dart';
 import 'package:all_one/features/auth/login/ui/login_screen.dart';
 import 'package:all_one/features/setting/ui/personal_Information.dart';
 import 'package:all_one/core/helper/lang_cache_helper.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
@@ -174,6 +175,7 @@ class _SettingState extends State<Setting> {
                 ),
                 InkWell(
                   onTap: () {
+                    FirebaseMessaging.instance.unsubscribeFromTopic('Users');
                     GoogleSignIn googleSignIn = GoogleSignIn();
                     googleSignIn.disconnect();
                     CacheHelper.sharedPreferences!.clear();
@@ -216,22 +218,22 @@ class _SettingState extends State<Setting> {
                 'asstes/icons/Error.png',
                 width: MediaQuery.sizeOf(context).width / 3.5,
               ),
-              const SizedBox(
-                height: 15,
+               SizedBox(
+                height: 15.h,
               ),
               Text(
                 'Please login to your account',
                 style:
                     GoogleFonts.cairo(textStyle: TextStyles.font18BlackMedium),
               ),
-              const SizedBox(
-                height: 15,
+               SizedBox(
+                height: 15.h,
               ),
               AppTextButton(
                   buttonText: 'Login',
                   textStyle: TextStyles.font14WhiteMedium,
                   buttonWidth: MediaQuery.sizeOf(context).width * .25,
-                  buttonHeight: MediaQuery.sizeOf(context).height * .001,
+                  buttonHeight: 40.h,
                   verticalPadding: 4,
                   backgroundColor: ColorsManager.gray,
 
@@ -249,10 +251,10 @@ class _SettingState extends State<Setting> {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        icon: const Icon(
+        icon:  Icon(
           Icons.error,
           color: Colors.red,
-          size: 32,
+          size: 32.h,
         ),
         content: Text(
           'Please login to your account',

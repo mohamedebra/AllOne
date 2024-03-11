@@ -43,7 +43,7 @@ class _CategoriesState extends State<Categories> {
           children: [
             Text('categories'.tr,style: TextStyles.font20BlueBold,),
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding:  EdgeInsets.only(top: 10.h),
               child: TextButton(onPressed: (){
                 context.pushNamed(Routes.categoryScreen);
               }, child: Text("see_all".tr,style: TextStyles.font14BlueSemiBold,)),
@@ -57,39 +57,39 @@ class _CategoriesState extends State<Categories> {
               return const LoadingCategory();
             } else if (state is TypesSuccess) {
               // Render your list here
-              return Column(
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+
                 children: [
-                  SizedBox(
-                    height: 75.h,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context,index){
-                        final imageUrl = 'http://app.misrgidda.com/${state.types.data![index].image!.image!}';
-                        String? changeLang = state.types.data![index].translations!.firstWhere(
-                              (TranslationLang translation) => translation.locale!.endsWith(lang),
-                          orElse: () => TranslationLang(),
-                        )?.title;
-                        return  Padding(
-                          padding: const EdgeInsets.only(right: 20,left: 7),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+
+                        children: [
+                      for (int i = 0; i < state.types.data!.length; i++)
+
+                        Padding(
+                          padding:  EdgeInsets.only(right: 20.w,left: 7.w),
                           child: Column(
+
                             children: [
                               SizedBox(
-                                height: 40,width: 30,
+                                height: 40.h,width: 30.w,
                                 child:
                                 CachedNetworkImage(
-                                  imageUrl: imageUrl,
+                                  imageUrl: 'http://app.misrgidda.com/${state.types.data![i].image!.image!}',
                                   errorWidget: (context,url,error)=> Icon(Icons.error),
                                 ), // Use the full URL here
                               ),
                               verticalSpace(10.h),
-                              Text(changeLang ?? 'no category',style: TextStyles.font13GrayRegular,)
+                              Text(state.types.data![i].translations!.firstWhere(
+                                    (TranslationLang translation) => translation.locale!.endsWith(lang),
+                                orElse: () => TranslationLang(),
+                              ).title ?? 'no category',style: TextStyles.font13GrayRegular,)
                             ],
                           ),
-                        );
-
-                      },
-                      itemCount: state.types.data!.length,
-                    ),
+                        ),
+                    ]),
                   ),
                 ],
               );
@@ -99,6 +99,7 @@ class _CategoriesState extends State<Categories> {
             return Container(height: 40,); // Fallback
           },
         ),
+        SizedBox(height: 5.h,),
 
 
       ],

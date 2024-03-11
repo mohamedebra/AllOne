@@ -12,6 +12,7 @@ import 'package:all_one/core/theming/styles.dart';
 import 'package:all_one/features/home/ui/home_view.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -25,7 +26,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../../../core/routing/routes.dart';
 import 'package:http/http.dart' as http;
 
-import '../test.dart';
 // import 'html_shim.dart' if (dart.library.html) 'dart:html' show window;
 
 class ConnectMedia extends StatefulWidget {
@@ -70,6 +70,8 @@ class _ConnectMediaState extends State<ConnectMedia> {
   // }
   Future signInWithGoogle(BuildContext context) async {
     // Trigger the authentication flow
+    FirebaseMessaging.instance.subscribeToTopic('Users');
+
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     if (googleUser == null) {
@@ -99,6 +101,8 @@ class _ConnectMediaState extends State<ConnectMedia> {
 
   Future<UserCredential> signInWithFacebook() async {
     // Trigger the sign-in flow
+    FirebaseMessaging.instance.subscribeToTopic('Users');
+
     final LoginResult loginResult = await FacebookAuth.instance.login();
 
     // Create a credential from the access token
@@ -164,7 +168,7 @@ class _ConnectMediaState extends State<ConnectMedia> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             CircleAvatar(
-              radius: 24,
+              radius: 24.w,
               backgroundColor: ColorsManager.moreLightGray,
               child: IconButton(
                   onPressed: () async {
@@ -173,7 +177,7 @@ class _ConnectMediaState extends State<ConnectMedia> {
                   icon: SvgPicture.asset('asstes/svgs/icons8-google.svg')),
             ),
             CircleAvatar(
-              radius: 24,
+              radius: 24.w,
               backgroundColor: ColorsManager.moreLightGray,
               child: IconButton(
                   onPressed: () async {
@@ -182,7 +186,7 @@ class _ConnectMediaState extends State<ConnectMedia> {
                   icon: SvgPicture.asset('asstes/svgs/icons8-facebook.svg')),
             ),
             CircleAvatar(
-              radius: 24,
+              radius: 24.w,
               backgroundColor: ColorsManager.moreLightGray,
               child: IconButton(
                   onPressed: () async {

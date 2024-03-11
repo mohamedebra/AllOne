@@ -1,12 +1,9 @@
 import 'package:all_one/core/networks/api_service.dart';
-import 'package:all_one/core/networks/dio_factory.dart';
 import 'package:all_one/features/home/data/repo/Product_repo.dart';
 import 'package:all_one/features/home/logic/home_cubit.dart';
 import 'package:all_one/features/offers/data/repo/offer_repo.dart';
-import 'package:all_one/features/offers/logic/offers_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-
 import '../../features/auth/login/data/repo/login_repo.dart';
 import '../../features/auth/login/logic/login_cubit.dart';
 import '../../features/auth/register/data/repo/register_repo.dart';

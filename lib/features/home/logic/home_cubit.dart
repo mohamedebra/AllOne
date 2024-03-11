@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:all_one/core/helper/chache_helper.dart';
+import 'package:all_one/core/networks/api_constants.dart';
 import 'package:all_one/core/wedgits/app_localization.dart';
 import 'package:all_one/features/home/logic/home_state.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive/hive.dart';
 import '../../offers/ui/offers_screen.dart';
 import '../../setting/ui/setting.dart';
 import '../data/repo/repo_types.dart';
@@ -70,11 +72,9 @@ List screen = [
     final result = await repo.getTypes();
     result.when(
       success: (types) async{
-        emit(TypesSuccess(types));
-        final String typesJson = jsonEncode(types);
 
-        // Save the serialized string into cache
-        await CacheHelper.savedata(key: 'types', value: typesJson);      },
+        emit(TypesSuccess(types));
+        },
       failure: (error) =>             emit(TypesError(error.apiErrorModel.message ?? '')),
     );
     // try{

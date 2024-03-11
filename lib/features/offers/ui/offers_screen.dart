@@ -19,8 +19,10 @@ import '../../../core/theming/colors.dart';
 import '../../../core/theming/styles.dart';
 import '../../home/data/model/product_offer.dart';
 import '../../home/ui/wedgits/details_product.dart';
+import '../../home/ui/wedgits/goggle_maps_product.dart';
 import '../data/model/model_country.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class Offers extends StatefulWidget {
   const Offers({super.key});
@@ -52,6 +54,9 @@ class _OffersState extends State<Offers> {
 
   List<City> selectedCountryCities = [];
   var countryList = <Country>[];
+  int currentPage = 1; // Keep track of the current page
+  int itemsPerPage = 10; // Define how many items per page you want
+  bool hasMoreData = true; // Indicates if there are more data to load
   fetchCountry() async {
     try {
       http.Response response = await http
@@ -77,35 +82,29 @@ class _OffersState extends State<Offers> {
     } finally {}
   }
 
-  fetchData() async {
-
+  Future<void> fetchData() async {
+    if (!hasMoreData) return; // Prevent fetching if no more data to load
     try {
       setState(() {
         isLoading = true;
       });
-      var isCache = await APICacheManager().isAPICacheKeyExist("Api_Product");
-      http.Response response =
-      await http.get(Uri.tryParse('http://app.misrgidda.com/api/items')!);
+
+      final response = await http.get(
+        Uri.tryParse('http://app.misrgidda.com/api/items?page=$currentPage&limit=$itemsPerPage')!,
+      );
+
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
+        var newProducts = ProductOffers.fromJson(result).data!.data!;
 
-        // Assuming `ProductOffers` is the model for your product items
-       bool isSaved =  await CacheHelper.saveDataWithExpiration(response.body, const Duration(days: 10));
-        if (isSaved) {
+        if (newProducts!.isEmpty) {
+          hasMoreData = false; // No more data to load
+        } else {
           setState(() {
-            productOffers = ProductOffers.fromJson(result);
-            isLoading = false;
-
-          });
-
-          // Add the decoded result to the allProducts list
-          // allProducts.add(productOffers);
-          setState(() {
-            allProducts = productOffers!.data!;
+            allProducts.addAll(newProducts); // Append new products to the list
             displayedProducts = allProducts;
+            currentPage++; // Increment the page number for the next request
           });
-          // tempProducts = productOffers!.data ;
-          print(allProducts.length);
           for (DataProduct pro in allProducts) {
             var title = pro.types!.translations!
                 .firstWhere(
@@ -123,21 +122,21 @@ class _OffersState extends State<Offers> {
               title = titleCategory;
             });
           }
-          // Print the title of the first item in the added productOffers list
-          print('//////////////allProducts////////// ${allProducts[1].title}');
-          return response.body;
-        } else {
-          return response.body;
+
         }
-
-
-
-        // Trigger an update in your UI using GetX
+      } else {
+        hasMoreData = false; // Assume no more data to load on error
       }
     } catch (e) {
-      print('Error while getting data is $e');
+      hasMoreData = false; // Assume no more data to load on exception
+      print('Error while getting data: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
+
   void updateDisplayedProducts() {
     List<DataProduct> tempProducts = allProducts;
 
@@ -211,6 +210,7 @@ class _OffersState extends State<Offers> {
   void initState() {
     getData();
     scrollController.addListener(() {
+      print('object');
       scroll();
     });
     super.initState();
@@ -219,8 +219,14 @@ class _OffersState extends State<Offers> {
 
   scroll(){
     if(scrollController.position.pixels == scrollController.position.maxScrollExtent){
+
       fetchData();
     }
+  }
+
+  void callNumber(DataProduct product) async {
+    String number = product.weight!; //set the number here
+    await FlutterPhoneDirectCaller.callNumber(number);
   }
 
 
@@ -250,8 +256,7 @@ class _OffersState extends State<Offers> {
               ],
             ),
           ),
-          body: SizedBox(
-            height: MediaQuery.sizeOf(context).height * .83,
+          body: SafeArea(
             child: Column(
               children: [
 
@@ -316,12 +321,12 @@ class _OffersState extends State<Offers> {
                 ),
                 // Filter chips
                 Wrap(
-                  spacing: 8.0,
+                  spacing: 8.0.w,
                   children: List<Widget>.generate(
                     categories.length,
                         (int index) {
                       return FilterChip(
-                        label: Text(categories[index]),
+                        label: Text(categories[index],style: TextStyle(fontSize: 13.sp),),
                         selected: selectedCategories.contains(categories[index]),
                         onSelected: (bool selected) {
                           if (selected!) {
@@ -349,94 +354,125 @@ class _OffersState extends State<Offers> {
                             // DataProduct productItems = state.displayedProducts.data![index];
                             return Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Column(
+                              child:  Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      // Assume `filteredProducts` is your current list after search/filter
-
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => DetailsProduct(
-                                                productItems: displayedProducts[index],
-                                              )
-                                          )
-                                      );
-
+                                                productItems:
+                                                displayedProducts[index],
+                                              )));
                                     },
-                                    child: SizedBox(
-                                      height: 70,
-                                      child: Row(
-                                        children: [
-                                          Stack(
-                                            alignment: AlignmentDirectional.topCenter,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius: BorderRadius.circular(7),
-                                                child: AspectRatio(
-                                                  aspectRatio: 9 / 9, // Adjust the aspect ratio as needed
-                                                  child: Container(
-                                                    color: Colors.grey[100],
-                                                    child: buildProductImage(displayedProducts[index]),
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(right: 15.w),
-                                                child: Image(
-                                                  image: AssetImage('asstes/icons/special-png.png'),
-                                                  width: 55,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                          const SizedBox(
-                                            width: 15,
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Stack(
+                                              alignment: AlignmentDirectional.topCenter,
                                               children: [
-                                                SizedBox(
-                                                  width: MediaQuery.of(context).size.width * .5,
-                                                  child: Text(changeLang ??'No title',
-                                                      maxLines: 2,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: TextStyles.font14DarkBlueMedium
+                                                Container(
+
+                                                  decoration:  BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(25)
                                                   ),
+                                                  width: 70.w,
+                                                  height: 75.h,
+                                                  child: buildProductImage(
+                                                      displayedProducts[index]),
                                                 ),
-                                                const SizedBox(
-                                                  height: 3,
-                                                ),
-                                                SizedBox(
-                                                  width: MediaQuery.of(context).size.width * .5,
-
-                                                  child: Text("${'Bestoffers'.tr + changeLang!}",
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: TextStyles.font14GrayRegular),
-                                                ),
-
-                                                const SizedBox(
-                                                  height: 3,
+                                                Padding(
+                                                  padding: EdgeInsets.only(right: 15.w),
+                                                  child: Image(
+                                                    image: const AssetImage(
+                                                        'asstes/icons/special-png.png'),
+                                                    width: 55.w,
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                            SizedBox(
+                                              width: 15.w,
+                                            ),
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: MediaQuery.of(context).size.width *
+                                                            .5,
+                                                        child: Text(displayedProducts[index].translations!
+                                                            .firstWhere(
+                                                              (title) => title.locale!.endsWith(lang),
+                                                        )
+                                                            .title ?? 'No title',
+                                                            maxLines: 2,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style:
+                                                            TextStyles.font14DarkBlueMedium),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 3.h,
+                                                      ),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(context).size.width *
+                                                            .5,
+                                                        child: Text(
+                                                            "${'Bestoffers'.tr + displayedProducts[index].translations!
+                                                                .firstWhere(
+                                                                  (title) => title.locale!.endsWith(lang),
+                                                            )
+                                                                .title!}",
+                                                            maxLines: 1,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: TextStyles.font14GrayRegular),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+
+                                                      InkWell(
+                                                        onTap: () => callNumber(displayedProducts[index]),
+                                                        child: CircleAvatar(
+                                                          radius: 10.h,
+                                                          backgroundImage: const AssetImage('asstes/icons/phone-call-icon.png'),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 7.h,),
+                                                      InkWell(
+                                                        onTap: (){
+                                                          Navigator.push(context, MaterialPageRoute(builder: (context) =>  GoogleMapsProduct(dataProduct:displayedProducts[index],)));
+
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 10.h,
+                                                          backgroundImage: const AssetImage('asstes/icons/61021.png'),
+                                                        ),
+                                                      ),
+
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+
+                                          ],
+                                        ),
+                                        SizedBox(height: 7.h,)
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 12.h,
-                                  ),
+
                                 ],
                               ),
                             );
@@ -498,6 +534,7 @@ class _OffersState extends State<Offers> {
       builder: (context) {
         return SizedBox(
           height: MediaQuery.sizeOf(context).height / 2,
+          width: MediaQuery.sizeOf(context).width * .8,
           child: Wrap(
             children: [
               Padding(
@@ -508,15 +545,15 @@ class _OffersState extends State<Offers> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15),
+                padding:  EdgeInsets.only(top: 15.h),
                 child: InkWell(
                   onTap: () {
                     showDialogCountry(context);
                     on = true;
                   },
                   child: ListTile(
-                    leading: Icon(Icons.menu),
-                    title: Text('Select country'.tr),
+                    leading: Icon(Icons.menu,size: 22.h,),
+                    title: Text('Select country'.tr,style: TextStyle(fontSize: 15.sp),),
                   ),
                 ),
               ),
@@ -534,8 +571,8 @@ class _OffersState extends State<Offers> {
                     on ? showDialogCity(context) : Center();
                   },
                   child: ListTile(
-                    leading: Icon(Icons.menu),
-                    title: Text('Select City'.tr),
+                    leading: Icon(Icons.menu,size: 22.h,),
+                    title: Text('Select City'.tr,style: TextStyle(fontSize: 15.sp),),
                   ),
                 ),
               ),
@@ -550,9 +587,9 @@ class _OffersState extends State<Offers> {
     showPlatformDialog(
       context: context,
       builder: (BuildContext context) => BasicDialogAlert(
-        title:  Text("Select Country".tr),
+        title:  Text("Select Country".tr,style: TextStyle(fontSize: 15.sp),),
         content: SizedBox(
-          height: 200,
+          height: 200.h,
           width: MediaQuery.of(context).size.width,
           child: ListView.builder(
             itemCount:country!.country.length,
@@ -635,9 +672,9 @@ class _OffersState extends State<Offers> {
           showPlatformDialog(
             context: context,
             builder: (BuildContext context) => BasicDialogAlert(
-              title: const Text("Select City"),
+              title:  Text("Select City".tr,style: TextStyle(fontSize: 15.sp),),
               content: SizedBox(
-                height: 300,
+                height: 300.h,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: selectedCountryCities.length,
@@ -652,6 +689,8 @@ class _OffersState extends State<Offers> {
                         )
                             .title ??
                             ' de',
+                        style: GoogleFonts.cairo(
+                          textStyle: TextStyles.font13DarkBlueRegular,),
                       ),
                       value: selectedCity ==
                           city.translations!

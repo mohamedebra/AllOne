@@ -22,7 +22,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<LoginResponse> login(LoginRequestBody loginRequestBody) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -51,7 +51,7 @@ class _ApiService implements ApiService {
   @override
   Future<RegisterResponse> register(
       RegisterRequestBody registerRequestBody) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -79,10 +79,10 @@ class _ApiService implements ApiService {
 
   @override
   Future<Types> getTypes() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<Map<String, dynamic>>(_setStreamType<Types>(Options(
       method: 'GET',
@@ -105,11 +105,17 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<ProductOffers> getItems() async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+  Future<ProductOffers> getItems(
+    int page,
+    int limit,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'limit': limit,
+    };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<ProductOffers>(Options(
       method: 'GET',
@@ -133,10 +139,10 @@ class _ApiService implements ApiService {
 
   @override
   Future<CountryApi> getCountry() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<CountryApi>(Options(
       method: 'GET',
@@ -160,10 +166,10 @@ class _ApiService implements ApiService {
 
   @override
   Future<AdsModel> getAds() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<Map<String, dynamic>>(_setStreamType<AdsModel>(Options(
       method: 'GET',
@@ -186,13 +192,13 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<ProductOffers> getNotification() async {
-    const _extra = <String, dynamic>{};
+  Future<ProductOffersA> getNotification() async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<ProductOffers>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<ProductOffersA>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -208,7 +214,7 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ProductOffers.fromJson(_result.data!);
+    final value = ProductOffersA.fromJson(_result.data!);
     return value;
   }
 

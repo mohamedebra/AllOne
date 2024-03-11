@@ -15,6 +15,7 @@ import '../../../core/wedgits/error.dart';
 import '../../../core/wedgits/loading_coustom_all_view.dart';
 import '../../home/data/model/product_offer.dart';
 import '../logic/notification_cubit.dart';
+import 'package:intl/intl.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -31,7 +32,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
     // TODO: implement initState
     super.initState();
   }
+  String getReadableDate(String dateStr) {
+    final DateFormat format = DateFormat('yyyy-MM-dd HH:mm:ss');
+    DateTime date = format.parse(dateStr);
 
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    DateTime yesterday = today.subtract(Duration(days: 1));
+    DateTime dateToCompare = DateTime(date.year, date.month, date.day);
+
+    if(dateToCompare == today) {
+      return "Today";
+    } else if(dateToCompare == yesterday) {
+      return "Yesterday";
+    } else {
+      // For any other date, return the formatted date or any format you need
+      return DateFormat('yyyy-MM-dd').format(date);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     
@@ -52,12 +70,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 25, top: 25, right: 10),
-                  child: Text(
-                    '${state.productOffersNotification.data![0].createdAt!}',
-                    style: TextStyles.font14GrayRegular,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 25, top: 25, right: 25),
+                      child: Text(//Jiffy.parse(state.productOffersNotification.data!.data![0].createdAt!).fromNow();
+                       // Jiffy.parse(state.productOffersNotification.data![0].createdAt!).fromNow(),
+                        getReadableDate(state.productOffersNotification.data![0].createdAt!),
+                        style: TextStyles.font14GrayRegular,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 10,),
                 ...List.generate(

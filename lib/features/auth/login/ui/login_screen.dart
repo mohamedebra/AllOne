@@ -3,12 +3,13 @@
 import 'dart:convert';
 
 import 'package:all_one/core/helper/extensions.dart';
-import 'package:all_one/features/auth/login/ui/test.dart';
 import 'package:all_one/features/auth/login/ui/wedgits/aready_have_account_text.dart';
 import 'package:all_one/features/auth/login/ui/wedgits/connect_Media.dart';
 import 'package:all_one/features/auth/login/ui/wedgits/email_and_password.dart';
 import 'package:all_one/features/auth/login/ui/wedgits/login_bloc_listener.dart';
 import 'package:all_one/features/auth/login/ui/wedgits/temrs_and_conditions_text.dart';
+import 'package:all_one/features/home/ui/home_Screen.dart';
+import 'package:all_one/features/home/ui/home_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,7 +142,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                               ),
                             ),
-
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                              InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const HomeView()));
+                                  },
+                                  child: Text('Back To Home',style: TextStyles.font14BlueSemiBold,))
+                            ],),
                             verticalSpace(40),
                             AppTextButton(
                               buttonText: "Login",
@@ -151,6 +160,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   validateThenDoLogin(context);
                                 }
                                 },
+                              buttonHeight: MediaQuery.of(context).size.height *.06,
+                              verticalPadding: 0,
+                              horizontalPadding: 0,
                             ),
                             // verticalSpace(70.h),
                             const ConnectMedia(),
