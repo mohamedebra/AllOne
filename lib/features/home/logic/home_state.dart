@@ -1,6 +1,7 @@
 
 import 'package:all_one/features/home/data/model/product_offer.dart';
 
+import '../data/model/model_local/local_model.dart';
 import '../data/model/model_types.dart';
 
 abstract class HomeState{}
@@ -14,9 +15,13 @@ class ChangeNavBar extends HomeState{}
 class ChangePosition extends HomeState{}
 
 // Category
-class TypesLoading extends HomeState{}
+class TypesLoading extends HomeState{
+  List<LocaleModelProduct> local;
+  TypesLoading(this.local);
+
+}
 class TypesSuccess extends HomeState{
-  Types types;
+  List<Data> types;
   TypesSuccess(this.types);
 }
 class TypesError extends HomeState{
@@ -25,7 +30,11 @@ class TypesError extends HomeState{
 }
 
 // Product
-class ProductLoading extends HomeState{}
+class ProductLoading extends HomeState{
+  List<LocaleModelProduct> local;
+  ProductLoading(this.local);
+
+}
 class ProductSuccess extends HomeState{
   ProductOffers productOffers;
   ProductSuccess(this.productOffers);

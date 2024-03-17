@@ -78,8 +78,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                         itemBuilder: (context, index) {
 
-                          final imageUrl = 'http://app.misrgidda.com/${state.types.data![index].image!.image!}';
-                          String? changeLang = state.types.data![index].translations!.firstWhere(
+                          final imageUrl = 'http://app.misrgidda.com/${state.types![index].image!.image!}';
+                          String? changeLang = state.types![index].translations!.firstWhere(
                                 (TranslationLang translation) => translation.locale!.endsWith(lang),
                             orElse: () => TranslationLang(),
                           )?.title;
@@ -98,7 +98,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ),
                           );
                         },
-                        itemCount: state.types.data!.length,
+                        itemCount: state.types.length,
                       ),
                     )
                   ],

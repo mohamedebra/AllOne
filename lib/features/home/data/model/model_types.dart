@@ -1,6 +1,9 @@
 import 'package:hive/hive.dart';
+part 'model_types.g.dart';
 
+@HiveType(typeId: 0)
 class Types {
+  @HiveField(0)
   List<Data>? data;
 
   Types({this.data});
@@ -22,16 +25,17 @@ class Types {
     return data;
   }
 }
-
+@HiveType(typeId: 1)
 class Data {
+    @HiveField(0)
   int? id;
-
+  @HiveField(1)
   int? sort;
-
+  @HiveField(2)
   String? title;
-
+  @HiveField(3)
   Images? image;
-
+  @HiveField(4)
   List<TranslationLang>? translations;
 
   Data({this.id, this.sort, this.title, this.image, this.translations});
@@ -63,14 +67,21 @@ class Data {
     return data;
   }
 }
-
+@HiveType(typeId: 2)
 class Images {
+    @HiveField(0)
   int? id;
+    @HiveField(1)
   String? createdAt;
+    @HiveField(2)
   String? updatedAt;
+    @HiveField(3)
   int? fileId;
+    @HiveField(4)
   String? fileType;
+    @HiveField(5)
   String? image;
+    @HiveField(6)
   int? main;
 
   Images(
@@ -104,14 +115,15 @@ class Images {
     return data;
   }
 }
-
+@HiveType(typeId: 3)
 class TranslationLang {
+    @HiveField(0)
   int? id;
-
+  @HiveField(1)
   int? typeId;
-
+  @HiveField(2)
   String? title;
-
+  @HiveField(3)
   String? locale;
 
   TranslationLang({this.id, this.typeId, this.title, this.locale});

@@ -186,6 +186,7 @@ class _GoogleMapsProductState extends State<GoogleMapsProduct> {
         .image;
     final customMarkerBytes = await _convertWidgetToBytes(imageUrl);
     final customMarkerIcon = BitmapDescriptor.fromBytes(customMarkerBytes!);
+
     markers.add(Marker(
       markerId: MarkerId(widget.dataProduct.title!),
       position: LatLng(widget.dataProduct.maxCount!, widget.dataProduct.price!),

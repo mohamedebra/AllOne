@@ -1,7 +1,11 @@
+import 'package:all_one/core/sql/sql_data.dart';
+import 'package:all_one/features/home/data/model/model_local/local_model.dart';
 import 'package:all_one/features/home/logic/product_cuibt/product_cuibt_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../core/fanction/fanction.dart';
+import '../../../../core/networks/api_constants.dart';
 import '../../data/model/product_offer.dart';
 import '../../data/repo/Product_repo.dart';
 
@@ -14,15 +18,21 @@ class ProductCuibtCubit extends Cubit<ProductCuibtState> {
   final int _limit = 10;
   bool isLoading = false;
 
+  List<LocaleModelProduct> listLocal = [];
   void fetchProduct() async {
-    if (state is ProductLoading) return; // Prevent concurrent fetches
+    if (state is ProductLoading) {
+
+      var db = DatabaseHelper.instance;
+      listLocal =await db.queryAllRows();
+      emit(ProductLoading(listLocal));
+    } // Prevent concurrent fetches
 
     if (!hasMoreData) {
       return; // Prevent fetching if no more data to load
     }
 
     if (_currentPage == 1) {
-      emit(ProductLoading());
+      emit(ProductLoading(listLocal));
       isLoading = true;
 
     }
@@ -30,6 +40,42 @@ class ProductCuibtCubit extends Cubit<ProductCuibtState> {
     final result = await productRepo.getProduct(page: _currentPage, limit: _limit);
     result.when(
       success: (productOffers) {
+
+        for (var i = 0; i < productOffers.data!.data!.length; i++)
+
+          {
+            var db = DatabaseHelper.instance;
+            String? title = productOffers.data!.data![i].translations!
+                .firstWhere(
+                  (title) => title.locale!.endsWith('en'),
+            )
+                .title;
+            int id = productOffers.data!.data![i].id!;
+            String imageUrl = productOffers.data!.data![i].files
+                ?.firstWhere(
+                    (file) =>
+                file.image!.endsWith('.jpg') ||
+                    file.image!.endsWith('.jpeg') ||
+                    file.image!.endsWith('.png'),
+                orElse: () => Files(
+                    fileType:
+                    'asstes/images/2.jpg') // Use orElse to handle the case when no valid image is found.
+            )
+                .image ?? '';
+            int quantity = productOffers.data!.data!.length!;
+
+            db.insert(LocaleModelProduct(
+              title: title,
+              id: id,
+              image: imageUrl,
+              quantity: quantity,
+            ));
+          }
+        // List<DataProduct> list =  saveDataLocale(boxname: ApiConstants.hiveBoxTypes,data: result);
+        // if(list.isNotEmpty){
+        //   emit(ProductSuccess(list));
+        // }
+
         if (productOffers.data!.data!.isEmpty || productOffers.data!.data!.length < _limit) {
           hasMoreData = false; // No more data to load
         }

@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       BlocBuilder<AdsCubit,AdsState>(
                           builder: (context,state){
                             if(state is AdsLoading){
-                              return const LoadingAds();
+                              return SizedBox(height: 50.h,);
                             }
                             if(state is AdsSuccess){
                               return SizedBox(

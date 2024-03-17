@@ -54,7 +54,39 @@ class _CategoriesState extends State<Categories> {
         BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
             if (state is TypesLoading) {
-              return const LoadingCategory();
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+
+                        children: [
+                          for (int i = 0; i < state.local.length; i++)
+
+                            Padding(
+                              padding:  EdgeInsets.only(right: 20.w,left: 7.w),
+                              child: Column(
+
+                                children: [
+                                  SizedBox(
+                                    height: 40.h,width: 30.w,
+                                    child:
+                                    CachedNetworkImage(
+                                      imageUrl: 'http://app.misrgidda.com/${state.local![i].image!}',
+                                      errorWidget: (context,url,error)=> Icon(Icons.error),
+                                    ), // Use the full URL here
+                                  ),
+                                  verticalSpace(10.h),
+                                  Text(state.local[i].title ?? 'no category',style: TextStyles.font13GrayRegular,)
+                                ],
+                              ),
+                            ),
+                        ]),
+                  ),
+                ],
+              );
             } else if (state is TypesSuccess) {
               // Render your list here
               return Row(
@@ -66,7 +98,7 @@ class _CategoriesState extends State<Categories> {
                     child: Row(
 
                         children: [
-                      for (int i = 0; i < state.types.data!.length; i++)
+                      for (int i = 0; i < state.types.length; i++)
 
                         Padding(
                           padding:  EdgeInsets.only(right: 20.w,left: 7.w),
@@ -77,12 +109,12 @@ class _CategoriesState extends State<Categories> {
                                 height: 40.h,width: 30.w,
                                 child:
                                 CachedNetworkImage(
-                                  imageUrl: 'http://app.misrgidda.com/${state.types.data![i].image!.image!}',
+                                  imageUrl: 'http://app.misrgidda.com/${state.types[i].image!.image!}',
                                   errorWidget: (context,url,error)=> Icon(Icons.error),
                                 ), // Use the full URL here
                               ),
                               verticalSpace(10.h),
-                              Text(state.types.data![i].translations!.firstWhere(
+                              Text(state.types[i].translations!.firstWhere(
                                     (TranslationLang translation) => translation.locale!.endsWith(lang),
                                 orElse: () => TranslationLang(),
                               ).title ?? 'no category',style: TextStyles.font13GrayRegular,)

@@ -2,6 +2,8 @@ import 'package:all_one/features/home/data/model/product_offer.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../../features/home/data/model/model_local/local_model.dart';
+
 class DatabaseHelper {
   static final _databaseName = "MyDatabase.db";
   static final _databaseVersion = 1;
@@ -9,6 +11,8 @@ class DatabaseHelper {
 
   static final columnId = 'id';
   static final columnTitle = 'title';
+  static final columnImage = 'image';
+  static final columnQuantity = 'quantity';
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -22,8 +26,7 @@ class DatabaseHelper {
   _initDatabase() async {
     String path = join(await getDatabasesPath(), _databaseName);
     return await openDatabase(path,
-        version: _databaseVersion,
-        onCreate: _onCreate);
+        version: _databaseVersion, onCreate: _onCreate);
   }
 
   // SQL code to create the database table.
@@ -31,28 +34,28 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $table (
             $columnId INTEGER PRIMARY KEY,
-            $columnTitle TEXT NOT NULL
+            $columnTitle TEXT NOT NULL,
+            $columnImage TEXT NOT NULL,
+            $columnQuantity INTEGER NOT NULL
           )
           ''');
   }
 
   // Helper methods for CRUD operations:
-  Future<int> insert(DataProduct myDataModel) async {
+  Future<int> insert(LocaleModelProduct myDataModel) async {
     Database db = await database;
-    return await db.insert(table, myDataModel.toJson());
+    return await db.insert(table, myDataModel.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<List<DataProduct>> queryAllRows() async {
+Future<List<LocaleModelProduct>> queryAllRows() async {
     Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query(table);
-
-    return List.generate(maps.length, (i) {
-      return DataProduct(
-        id: maps[i]['id'],
-        title: maps[i]['title'],
-      );
-    });
+    
+    List<LocaleModelProduct> list = maps.isNotEmpty ? maps.map((product) => LocaleModelProduct.fromJson(product)).toList() : [];
+  return list;
   }
+
   Future<void> clearTable() async {
     Database db = await database;
     await db.delete(table);

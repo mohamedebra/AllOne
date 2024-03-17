@@ -11,7 +11,9 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
+import '../../features/home/data/model/product_offer.dart';
 import '../../features/home/data/repo/repo_types.dart';
 import '../../firebase_options.dart';
 import '../DI/dependency_injection.dart';
@@ -34,12 +36,28 @@ class MyServices extends GetxService {
    await CacheHelper.init();
 
     await ScreenUtil.ensureScreenSize();
-    // await Hive.initFlutter();
-    // Hive.registerAdapter(TypesAdapter());
-    // Hive.registerAdapter(DataAdapter());
-    // Hive.registerAdapter(ImagesAdapter());
-    // Hive.registerAdapter(TranslationLangAdapter());
-    // await Hive.openBox(ApiConstants.hiveBoxTypes);
+    await Hive.initFlutter();
+    Hive.registerAdapter(TypesAdapter());
+    Hive.registerAdapter(DataAdapter());
+    Hive.registerAdapter(ImagesAdapter());
+    Hive.registerAdapter(TranslationLangAdapter());
+    Hive.registerAdapter(DataProductAdapter()); // Register each adapter
+    await Hive.openBox(ApiConstants.hiveBoxTypes);
+    final appDocumentDirectory = await path_provider.getApplicationDocumentsDirectory();
+    Hive.init(appDocumentDirectory.path);
+    await Hive.openBox<DataProduct>('products'); // Make sure this is awaited
+
+    // Hive.registerAdapter(ProductOffersAdapter());
+    // Hive.registerAdapter(ProductOffersAAdapter());
+    // Hive.registerAdapter(DataProductAdapter());
+    // Hive.registerAdapter(FilesAdapter());
+    // Hive.registerAdapter(CategoriesDataAdapter());
+    // Hive.registerAdapter(TranslationsProductAdapter());
+    // Hive.registerAdapter(TranslationsDataAdapter());
+    // Hive.registerAdapter(TypesProductAdapter());
+    // Hive.registerAdapter(TranslationAdapter());
+
+
     FirebaseMessaging.instance.subscribeToTopic('users');
     TypesRepo(ApiService(Dio())).getTypes();
 

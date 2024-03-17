@@ -12,41 +12,16 @@ class OfferRepo{
 
 
 
-  Future<ApiResult<CountryApi>> getCountry() async {
-    try {
-      final response = await apiService.getCountry(); // Ensure this returns List<Post>
-      List<CountryApi> country = [];
-      country.add(CountryApi.fromJson(response.toJson()));
-      return ApiResult.success(response);
-    } catch (error) {
-      return ApiResult.failure(ErrorHandler.handle(error));
-    }
-  }
-  Future<ApiResult<Types>> getTypes() async {
-    // try {
-    //   final product = await apiService.getItems();
-    //   print(product);
-    //   return ApiResult.success(product);
-    // } catch (error) {
-    //   return ApiResult.failure(ErrorHandler.handle(error));
-    // }
-    try {
-      final response = await apiService.getTypes(); // Ensure this returns List<Post>
-      return ApiResult.success(response);
-    } catch (error) {
-      return ApiResult.failure(ErrorHandler.handle(error));
-    }
-  }
-  Future<ApiResult<List<ProductOffers>>> getTypesList() async {
+  Future<CountryApi> getCountry() async {
+    final response = await apiService.getCountry(); // Ensure this returns List<Post>
 
-    try {
-      final response = await apiService.getTypes(); // Ensure this returns List<Post>
-      List<ProductOffers> country = [];
-      country.add(ProductOffers.fromJson(response.toJson()));
-      return ApiResult.success(country);
-    } catch (error) {
-      return ApiResult.failure(ErrorHandler.handle(error));
-    }
+    return response;
   }
+  Future<ProductOffers> getProduct({int page = 1, int limit = 10}) async {
+    final response = await apiService.getItems(page, limit);
+    return response;
+  }
+
+
 
 }

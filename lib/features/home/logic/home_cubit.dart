@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:all_one/core/fanction/fanction.dart';
 import 'package:all_one/core/helper/chache_helper.dart';
 import 'package:all_one/core/networks/api_constants.dart';
 import 'package:all_one/core/wedgits/app_localization.dart';
+import 'package:all_one/features/home/data/model/model_types.dart';
 import 'package:all_one/features/home/logic/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +14,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
+import '../../../core/sql/sql_data.dart';
 import '../../offers/ui/offers_screen.dart';
 import '../../setting/ui/setting.dart';
+import '../data/model/model_local/local_model.dart';
+import '../data/model/product_offer.dart';
 import '../data/repo/repo_types.dart';
 import '../ui/home_Screen.dart';
 
@@ -41,6 +46,8 @@ List screen = [
 
   final Set<Marker> markers = Set();
   StreamSubscription<Position>? positionStream;
+  List<LocaleModelProduct> listLocal = [];
+
   void changeBottonNav(index) {
     currentIndex = index;
     emit(ChangeNavBar());
@@ -67,13 +74,39 @@ List screen = [
             });
 
   }
+
   void fetchTypes() async {
-    emit(TypesLoading());
+
+    if (state is ProductLoading) {
+
+      var db = DatabaseHelper.instance;
+      listLocal =await db.queryAllRows();
+      emit(TypesLoading(listLocal));
+    } // Prevent concurrent fetches
     final result = await repo.getTypes();
     result.when(
       success: (types) async{
+        for (var i = 0; i < types.data!.length; i++)
 
-        emit(TypesSuccess(types));
+        {
+          var db = DatabaseHelper.instance;
+          String? title = types.data![i].translations!
+              .firstWhere(
+                (title) => title.locale!.endsWith('en'),
+          )
+              .title;
+          int id = types.data![i].id!;
+          String imageUrl = types.data![i].image!.image ?? '';
+          int quantity = types.data!.length;
+
+          db.insert(LocaleModelProduct(
+            title: title,
+            id: id,
+            image: imageUrl,
+            quantity: quantity,
+          ));
+        }
+        emit(TypesSuccess(types.data!));
         },
       failure: (error) =>             emit(TypesError(error.apiErrorModel.message ?? '')),
     );

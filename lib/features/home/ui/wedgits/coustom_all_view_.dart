@@ -1,3 +1,4 @@
+import 'package:all_one/features/home/data/model/model_local/local_model.dart';
 import 'package:all_one/features/home/ui/wedgits/goggle_maps_product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _CustomAllViewState extends State<CustomAllView> {
       BlocProvider.of<ProductCuibtCubit>(context).loadNextPage();
     }
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -40,6 +42,7 @@ class _CustomAllViewState extends State<CustomAllView> {
     // context.read<ProductCuibtCubit>().fetchProduct();
     super.initState();
   }
+
   void _onScroll() {
     if (_isBottom) context.read<ProductCuibtCubit>().loadNextPage();
   }
@@ -50,26 +53,23 @@ class _CustomAllViewState extends State<CustomAllView> {
     final currentScroll = scrollController.offset;
     return currentScroll >= (maxScroll * 0.9); // Adjust the threshold as needed
   }
+
   void callNumber(DataProduct product) async {
     String number = product.weight!; //set the number here
-   await FlutterPhoneDirectCaller.callNumber(number!);
+    await FlutterPhoneDirectCaller.callNumber(number!);
   }
+
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<ProductCuibtCubit, ProductCuibtState>(
       builder: (context, state) {
-
         if (state is ProductLoading) {
-          return const LoadingCoustomAllView();
-        }  if (state is ProductSuccess) {
-          // Render your list here
-          return   ListView.builder(
+          return ListView.builder(
             // controller: scrollController,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
 
-            itemCount: state.productOffers.length ,
+            itemCount: state.local.length,
             itemBuilder: (context, i) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,13 +77,13 @@ class _CustomAllViewState extends State<CustomAllView> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailsProduct(
-                                productItems:
-                                state.productOffers[i],
-                              )));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => DetailsProduct(
+                      //           productItems:
+                      //           state.local[i],
+                      //         )));
                     },
                     child: Column(
                       children: [
@@ -93,14 +93,11 @@ class _CustomAllViewState extends State<CustomAllView> {
                               alignment: AlignmentDirectional.topCenter,
                               children: [
                                 Container(
-
-                                  decoration:  BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25)
-                                  ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25)),
                                   width: 70.w,
                                   height: 75.h,
-                                  child: buildProductImage(
-                                      state.productOffers[i]),
+                                  child: buildProductImageLocal(state.local[i]),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 15.w),
@@ -117,82 +114,227 @@ class _CustomAllViewState extends State<CustomAllView> {
                             ),
                             Expanded(
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        width: MediaQuery.of(context).size.width *
-                                            .5,
-                                        child: Text(state.productOffers![i].translations!
-                                            .firstWhere(
-                                              (title) => title.locale!.endsWith(lang),
-                                        )
-                                            .title ?? 'No title',
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .5,
+                                        child: Text(
+                                            state.local[i].title ?? 'No title',
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            style:
-                                            TextStyles.font14DarkBlueMedium),
+                                            style: TextStyles
+                                                .font14DarkBlueMedium),
                                       ),
                                       SizedBox(
                                         height: 3.h,
                                       ),
                                       SizedBox(
-                                        width: MediaQuery.of(context).size.width *
-                                            .5,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .5,
                                         child: Text(
-                                            "${'Bestoffers'.tr + state.productOffers![i].translations!
-                                                .firstWhere(
-                                                  (title) => title.locale!.endsWith(lang),
-                                            )
-                                                .title!}",
+                                            "${'Bestoffers'.tr + state.local[i].title!}",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyles.font14GrayRegular),
+                                            style:
+                                                TextStyles.font14GrayRegular),
                                       ),
                                     ],
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-
                                       InkWell(
-                                        onTap: () => callNumber(state.productOffers[i]),
+                                        onTap: () {},
                                         child: CircleAvatar(
                                           radius: 10.h,
-                                          backgroundImage: const AssetImage('asstes/icons/phone-call-icon.png'),
+                                          backgroundImage: const AssetImage(
+                                              'asstes/icons/phone-call-icon.png'),
                                         ),
                                       ),
-                                      SizedBox(height: 7.h,),
+                                      SizedBox(
+                                        height: 7.h,
+                                      ),
                                       InkWell(
-                                        onTap: (){
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) =>  GoogleMapsProduct(dataProduct:state.productOffers![i],)));
-
+                                        onTap: () {
+                                          // Navigator.push(context, MaterialPageRoute(builder: (context) =>  GoogleMapsProduct(dataProduct:state.productOffers![i],)));
                                         },
                                         child: CircleAvatar(
                                           radius: 10.h,
-                                          backgroundImage: const AssetImage('asstes/icons/61021.png'),
+                                          backgroundImage: const AssetImage(
+                                              'asstes/icons/61021.png'),
                                         ),
                                       ),
-
                                     ],
                                   )
                                 ],
                               ),
                             ),
-
                           ],
                         ),
-                        SizedBox(height: 7.h,)
+                        SizedBox(
+                          height: 7.h,
+                        )
                       ],
                     ),
                   ),
-
                 ],
               );
+            },
+          );
+        }
+        if (state is ProductSuccess) {
+          // Render your list here
+          return ListView.builder(
+            // controller: scrollController,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
 
+            itemCount: state.productOffers.length,
+            itemBuilder: (context, i) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailsProduct(
+                                    productItems: state.productOffers[i],
+                                  )));
+                    },
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Stack(
+                              alignment: AlignmentDirectional.topCenter,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25)),
+                                  width: 70.w,
+                                  height: 75.h,
+                                  child:
+                                      buildProductImage(state.productOffers[i]),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 15.w),
+                                  child: Image(
+                                    image: const AssetImage(
+                                        'asstes/icons/special-png.png'),
+                                    width: 55.w,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 15.w,
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .5,
+                                        child: Text(
+                                            state.productOffers![i]
+                                                    .translations!
+                                                    .firstWhere(
+                                                      (title) => title.locale!
+                                                          .endsWith(lang),
+                                                    )
+                                                    .title ??
+                                                'No title',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyles
+                                                .font14DarkBlueMedium),
+                                      ),
+                                      SizedBox(
+                                        height: 3.h,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .5,
+                                        child: Text(
+                                            "${'Bestoffers'.tr + state.productOffers![i].translations!.firstWhere(
+                                                  (title) => title.locale!
+                                                      .endsWith(lang),
+                                                ).title!}",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style:
+                                                TextStyles.font14GrayRegular),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () =>
+                                            callNumber(state.productOffers[i]),
+                                        child: CircleAvatar(
+                                          radius: 10.h,
+                                          backgroundImage: const AssetImage(
+                                              'asstes/icons/phone-call-icon.png'),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 7.h,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      GoogleMapsProduct(
+                                                        dataProduct: state
+                                                            .productOffers![i],
+                                                      )));
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 10.h,
+                                          backgroundImage: const AssetImage(
+                                              'asstes/icons/61021.png'),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 7.h,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              );
             },
           );
         } else if (state is ProductError) {
@@ -252,6 +394,39 @@ class _CustomAllViewState extends State<CustomAllView> {
     }
     return Container();
   }
+
+  Widget buildProductImageLocal(LocaleModelProduct product) {
+    // Find the first image file that is an actual image (ignoring non-image files).
+
+    // String? imageUrl = product.files?.firstWhere(
+    //       (file) => file.image!.endsWith('.jpg') || file.image!.endsWith('.jpeg') || file.image!.endsWith('.png'),
+    //   orElse: () => null, // Use orElse to handle the case when no valid image is found.
+    //
+    // ).image;
+    String? imageUrl = product.image;
+
+    // Check if an image URL was found and is not null.
+    if (imageUrl != null) {
+      // Complete the URL if necessary (if the stored URL is relative).
+      String fullImageUrl = 'http://app.misrgidda.com$imageUrl';
+
+      // Return an Image widget to display the image.
+      // return Image(image: NetworkImage(fullImageUrl),fit: BoxFit.cover,);
+      return CachedNetworkImage(
+        fit: BoxFit.fill,
+        imageUrl: fullImageUrl,
+        errorWidget: (context, url, error) => const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error, color: Colors.red),
+            Text('Failed to load image'),
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
   @override
   void dispose() {
     scrollController.dispose();
