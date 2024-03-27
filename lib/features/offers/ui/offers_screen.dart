@@ -90,7 +90,8 @@ class _OffersState extends State<Offers> {
       });
 
       final response = await http.get(
-        Uri.tryParse('http://app.misrgidda.com/api/items?page=$currentPage&limit=$itemsPerPage')!,
+        Uri.tryParse(
+            'http://app.misrgidda.com/api/items?page=$currentPage&limit=$itemsPerPage')!,
       );
 
       if (response.statusCode == 200) {
@@ -109,8 +110,8 @@ class _OffersState extends State<Offers> {
             var title = pro.types!.translations!
                 .firstWhere(
                   (element) => element.locale!
-                  .endsWith(lang), // Provide a default empty title
-            )
+                      .endsWith(lang), // Provide a default empty title
+                )
                 .title;
 
             if (title != null && !categories.contains(title)) {
@@ -122,7 +123,6 @@ class _OffersState extends State<Offers> {
               title = titleCategory;
             });
           }
-
         }
       } else {
         hasMoreData = false; // Assume no more data to load on error
@@ -143,10 +143,10 @@ class _OffersState extends State<Offers> {
     if (selectedCountry?.isNotEmpty == true) {
       List<City> countryCities = country!.country
           .firstWhere((country) =>
-      country.translations!
-          .firstWhere((element) => element.locale!.endsWith('ar'))
-          .title ==
-          selectedCountry)
+              country.translations!
+                  .firstWhere((element) => element.locale!.endsWith('ar'))
+                  .title ==
+              selectedCountry)
           .city!;
       tempProducts = countryCities.expand((city) => city.items!).toList();
       selectedCountryCities.addAll(countryCities);
@@ -156,10 +156,10 @@ class _OffersState extends State<Offers> {
     if (selectedCity?.isNotEmpty == true) {
       tempProducts = selectedCountryCities
           .firstWhere((city) =>
-      city.translations!
-          .firstWhere((element) => element.locale!.endsWith('ar'))
-          .title ==
-          selectedCity)
+              city.translations!
+                  .firstWhere((element) => element.locale!.endsWith('ar'))
+                  .title ==
+              selectedCity)
           .items!;
     }
 
@@ -176,9 +176,9 @@ class _OffersState extends State<Offers> {
           var title = translations
               .firstWhere(
                 (element) => element.locale!.endsWith(lang),
-            orElse: () =>
-                TranslationsData(), // Handle the case where no matching translation is found
-          )
+                orElse: () =>
+                    TranslationsData(), // Handle the case where no matching translation is found
+              )
               ?.title;
 
           return title != null && selectedCategories.contains(title);
@@ -190,8 +190,8 @@ class _OffersState extends State<Offers> {
     if (searchController.text.isNotEmpty) {
       tempProducts = tempProducts
           .where((product) => product.title!
-          .toLowerCase()
-          .contains(searchController.text.toLowerCase()))
+              .toLowerCase()
+              .contains(searchController.text.toLowerCase()))
           .toList();
     }
 
@@ -202,10 +202,11 @@ class _OffersState extends State<Offers> {
 
   ScrollController scrollController = ScrollController();
 
-  Future getData()async{
-  await  fetchData();
-  await fetchCountry();
+  Future getData() async {
+    await fetchData();
+    await fetchCountry();
   }
+
   @override
   void initState() {
     getData();
@@ -216,10 +217,9 @@ class _OffersState extends State<Offers> {
     super.initState();
   }
 
-
-  scroll(){
-    if(scrollController.position.pixels == scrollController.position.maxScrollExtent){
-
+  scroll() {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
       fetchData();
     }
   }
@@ -229,10 +229,8 @@ class _OffersState extends State<Offers> {
     await FlutterPhoneDirectCaller.callNumber(number);
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return RefreshIndicator(
       onRefresh: getData,
       child: Scaffold(
@@ -259,27 +257,23 @@ class _OffersState extends State<Offers> {
           body: SafeArea(
             child: Column(
               children: [
-
                 // Search field
                 Padding(
-                  padding:
-                  const EdgeInsets.only(top: 25, left: 20, right: 20),
+                  padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
                   child: TextFormField(
                     controller: searchController,
                     decoration: InputDecoration(
                       isDense: true,
-                      contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
-                      focusedBorder:
-                      OutlineInputBorder(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 18.h),
+                      focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
                           color: ColorsManager.mainMauve,
                           width: 1.3,
                         ),
                         borderRadius: BorderRadius.circular(16.0),
                       ),
-                      enabledBorder:
-                      OutlineInputBorder(
+                      enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
                           color: ColorsManager.lighterGray,
                           width: 1.3,
@@ -300,34 +294,38 @@ class _OffersState extends State<Offers> {
                         ),
                         borderRadius: BorderRadius.circular(16.0),
                       ),
-                      hintStyle:  TextStyles.font14LightGrayRegular,
+                      hintStyle: TextStyles.font14LightGrayRegular,
                       hintText: 'Search'.tr,
                       suffixIcon: const Icon(
                         Icons.search_sharp,
                         color: ColorsManager.lightGray,
                         size: 25,
                       ),
-                      fillColor:  ColorsManager.moreLightGray,
+                      fillColor: ColorsManager.moreLightGray,
                       filled: true,
                     ),
-                    obscureText:  false,
+                    obscureText: false,
                     style: TextStyles.font14DarkBlueMedium,
-                    validator: (value) {
-                    },
+                    validator: (value) {},
                     onChanged: (searchText) {
                       updateDisplayedProducts();
                       // controllerData.addSearchProduct(searchText);
-                    },                            ),
+                    },
+                  ),
                 ),
                 // Filter chips
                 Wrap(
                   spacing: 8.0.w,
                   children: List<Widget>.generate(
                     categories.length,
-                        (int index) {
+                    (int index) {
                       return FilterChip(
-                        label: Text(categories[index],style: TextStyle(fontSize: 13.sp),),
-                        selected: selectedCategories.contains(categories[index]),
+                        label: Text(
+                          categories[index],
+                          style: TextStyle(fontSize: 13.sp),
+                        ),
+                        selected:
+                            selectedCategories.contains(categories[index]),
                         onSelected: (bool selected) {
                           if (selected!) {
                             selectedCategories.add(categories[index]);
@@ -335,7 +333,8 @@ class _OffersState extends State<Offers> {
                             selectedCategories.remove(categories[index]);
                           }
                           updateDisplayedProducts();
-                        },                          );
+                        },
+                      );
                     },
                   ),
                 ),
@@ -348,13 +347,18 @@ class _OffersState extends State<Offers> {
                           shrinkWrap: true,
                           controller: scrollController,
                           itemBuilder: (context, index) {
-                            String? changeLang = displayedProducts[index].translations!.firstWhere(
-                                  (title) => title.locale!.endsWith(lang),
-                            ).title ?? '';
+                            String? changeLang = displayedProducts[index]
+                                    .translations!
+                                    .firstWhere(
+                                      (title) => title.locale!.endsWith(lang),
+                                    )
+                                    .title ??
+                                '';
                             // DataProduct productItems = state.displayedProducts.data![index];
                             return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child:  Column(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -363,30 +367,34 @@ class _OffersState extends State<Offers> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => DetailsProduct(
-                                                productItems:
-                                                displayedProducts[index],
-                                              )));
+                                              builder: (context) =>
+                                                  DetailsProduct(
+                                                    productItems:
+                                                        displayedProducts[
+                                                            index],
+                                                  )));
                                     },
                                     child: Column(
                                       children: [
                                         Row(
                                           children: [
                                             Stack(
-                                              alignment: AlignmentDirectional.topCenter,
+                                              alignment: AlignmentDirectional
+                                                  .topCenter,
                                               children: [
                                                 Container(
-
-                                                  decoration:  BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(25)
-                                                  ),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25)),
                                                   width: 70.w,
                                                   height: 75.h,
                                                   child: buildProductImage(
                                                       displayedProducts[index]),
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsets.only(right: 15.w),
+                                                  padding: EdgeInsets.only(
+                                                      right: 15.w),
                                                   child: Image(
                                                     image: const AssetImage(
                                                         'asstes/icons/special-png.png'),
@@ -400,111 +408,147 @@ class _OffersState extends State<Offers> {
                                             ),
                                             Expanded(
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       SizedBox(
-                                                        width: MediaQuery.of(context).size.width *
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
                                                             .5,
-                                                        child: Text(displayedProducts[index].translations!
-                                                            .firstWhere(
-                                                              (title) => title.locale!.endsWith(lang),
-                                                        )
-                                                            .title ?? 'No title',
+                                                        child: Text(
+                                                            displayedProducts[
+                                                                        index]
+                                                                    .translations!
+                                                                    .firstWhere(
+                                                                      (title) => title
+                                                                          .locale!
+                                                                          .endsWith(
+                                                                              lang),
+                                                                    )
+                                                                    .title ??
+                                                                'No title',
                                                             maxLines: 2,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style:
-                                                            TextStyles.font14DarkBlueMedium),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyles
+                                                                .font14DarkBlueMedium),
                                                       ),
                                                       SizedBox(
                                                         height: 3.h,
                                                       ),
                                                       SizedBox(
-                                                        width: MediaQuery.of(context).size.width *
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
                                                             .5,
                                                         child: Text(
-                                                            "${'Bestoffers'.tr + displayedProducts[index].translations!
-                                                                .firstWhere(
-                                                                  (title) => title.locale!.endsWith(lang),
-                                                            )
-                                                                .title!}",
+                                                            "${'Bestoffers'.tr + displayedProducts[index].translations!.firstWhere(
+                                                                  (title) => title
+                                                                      .locale!
+                                                                      .endsWith(
+                                                                          lang),
+                                                                ).title!}",
                                                             maxLines: 1,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style: TextStyles.font14GrayRegular),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyles
+                                                                .font14GrayRegular),
                                                       ),
                                                     ],
                                                   ),
                                                   Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
-
                                                       InkWell(
-                                                        onTap: () => callNumber(displayedProducts[index]),
+                                                        onTap: () => callNumber(
+                                                            displayedProducts[
+                                                                index]),
                                                         child: CircleAvatar(
                                                           radius: 10.h,
-                                                          backgroundImage: const AssetImage('asstes/icons/phone-call-icon.png'),
+                                                          backgroundImage:
+                                                              const AssetImage(
+                                                                  'asstes/icons/phone-call-icon.png'),
                                                         ),
                                                       ),
-                                                      SizedBox(height: 7.h,),
+                                                      SizedBox(
+                                                        height: 7.h,
+                                                      ),
                                                       InkWell(
-                                                        onTap: (){
-                                                          Navigator.push(context, MaterialPageRoute(builder: (context) =>  GoogleMapsProduct(dataProduct:displayedProducts[index],)));
-
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          GoogleMapsProduct(
+                                                                            dataProduct:
+                                                                                displayedProducts[index],
+                                                                          )));
                                                         },
                                                         child: CircleAvatar(
                                                           radius: 10.h,
-                                                          backgroundImage: const AssetImage('asstes/icons/61021.png'),
+                                                          backgroundImage:
+                                                              const AssetImage(
+                                                                  'asstes/icons/61021.png'),
                                                         ),
                                                       ),
-
                                                     ],
                                                   )
                                                 ],
                                               ),
                                             ),
-
                                           ],
                                         ),
-                                        SizedBox(height: 7.h,)
+                                        SizedBox(
+                                          height: 7.h,
+                                        )
                                       ],
                                     ),
                                   ),
-
                                 ],
                               ),
                             );
                           },
                           itemCount: displayedProducts.length,
-
                         ),
                       ),
-                      if(isLoading)
-                        CircularProgressIndicator()
+                      if (isLoading) CircularProgressIndicator()
                     ],
                   ),
                 )
               ],
             ),
-          )
-
-      ),
+          )),
     );
   }
-  Widget buildProductImage(DataProduct product) {
 
+  Widget buildProductImage(DataProduct product) {
     String? imageUrl = product.files
         ?.firstWhere(
             (file) =>
-        file.image!.endsWith('.jpg') ||
-            file.image!.endsWith('.jpeg') ||
-            file.image!.endsWith('.png'),
-        orElse: () => Files(
-            fileType:
-            'asstes/images/2.jpg') // Use orElse to handle the case when no valid image is found.
-    )
+                file.image!.endsWith('.jpg') ||
+                file.image!.endsWith('.jpeg') ||
+                file.image!.endsWith('.png'),
+            orElse: () => Files(
+                fileType:
+                    'asstes/images/2.jpg') // Use orElse to handle the case when no valid image is found.
+            )
         .image;
 
     // Check if an image URL was found and is not null.
@@ -528,6 +572,7 @@ class _OffersState extends State<Offers> {
     }
     return Container();
   }
+
   void chooseName(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -545,15 +590,21 @@ class _OffersState extends State<Offers> {
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.only(top: 15.h),
+                padding: EdgeInsets.only(top: 15.h),
                 child: InkWell(
                   onTap: () {
                     showDialogCountry(context);
                     on = true;
                   },
                   child: ListTile(
-                    leading: Icon(Icons.menu,size: 22.h,),
-                    title: Text('Select country'.tr,style: TextStyle(fontSize: 15.sp),),
+                    leading: Icon(
+                      Icons.menu,
+                      size: 22.h,
+                    ),
+                    title: Text(
+                      'Select country'.tr,
+                      style: TextStyle(fontSize: 15.sp),
+                    ),
                   ),
                 ),
               ),
@@ -571,8 +622,14 @@ class _OffersState extends State<Offers> {
                     on ? showDialogCity(context) : Center();
                   },
                   child: ListTile(
-                    leading: Icon(Icons.menu,size: 22.h,),
-                    title: Text('Select City'.tr,style: TextStyle(fontSize: 15.sp),),
+                    leading: Icon(
+                      Icons.menu,
+                      size: 22.h,
+                    ),
+                    title: Text(
+                      'Select City'.tr,
+                      style: TextStyle(fontSize: 15.sp),
+                    ),
                   ),
                 ),
               ),
@@ -587,23 +644,25 @@ class _OffersState extends State<Offers> {
     showPlatformDialog(
       context: context,
       builder: (BuildContext context) => BasicDialogAlert(
-        title:  Text("Select Country".tr,style: TextStyle(fontSize: 15.sp),),
+        title: Text(
+          "Select Country".tr,
+          style: TextStyle(fontSize: 15.sp),
+        ),
         content: SizedBox(
           height: 200.h,
           width: MediaQuery.of(context).size.width,
           child: ListView.builder(
-            itemCount:country!.country.length,
+            itemCount: country!.country.length,
             itemBuilder: (BuildContext context, int index) {
               Country select = country!.country[index];
 
               return CheckboxListTile(
                 title: Text(
-                  country!.country![index]
-                      .translations!
-                      .firstWhere(
-                        (title) => title.locale!.endsWith('ar'),
-                  )
-                      .title ??
+                  country!.country![index].translations!
+                          .firstWhere(
+                            (title) => title.locale!.endsWith('ar'),
+                          )
+                          .title ??
                       'ed',
                   style: GoogleFonts.cairo(
                     textStyle: TextStyles.font13DarkBlueRegular,
@@ -613,17 +672,16 @@ class _OffersState extends State<Offers> {
                     select.translations
                         ?.firstWhere(
                           (title) => title.locale!.endsWith('ar'),
-                    )
+                        )
                         .title,
-
                 activeColor: ColorsManager.mainMauve,
                 onChanged: (bool? value) {
                   if (value == true) {
                     selectedCountry = select.translations
-                        ?.firstWhere(
-                          (title) => title.locale!.endsWith('ar'),
-                    )
-                        .title ??
+                            ?.firstWhere(
+                              (title) => title.locale!.endsWith('ar'),
+                            )
+                            .title ??
                         'مصر';
                   } else {
                     setState(() {
@@ -635,7 +693,6 @@ class _OffersState extends State<Offers> {
                   });
                   updateDisplayedProducts(); // Update displayed products based on new filter
                   Navigator.pop(context);
-
                 },
               );
             },
@@ -657,7 +714,7 @@ class _OffersState extends State<Offers> {
     if (selectedCountry != null) {
       // Find the selected country
       Country selectedCountryObj = country!.country.firstWhere(
-            (country) => country.translations!
+        (country) => country.translations!
             .any((element) => element.title == selectedCountry),
       );
 
@@ -672,7 +729,10 @@ class _OffersState extends State<Offers> {
           showPlatformDialog(
             context: context,
             builder: (BuildContext context) => BasicDialogAlert(
-              title:  Text("Select City".tr,style: TextStyle(fontSize: 15.sp),),
+              title: Text(
+                "Select City".tr,
+                style: TextStyle(fontSize: 15.sp),
+              ),
               content: SizedBox(
                 height: 300.h,
                 width: MediaQuery.of(context).size.width,
@@ -683,14 +743,15 @@ class _OffersState extends State<Offers> {
                     return CheckboxListTile(
                       title: Text(
                         city.translations!
-                            .firstWhere(
-                              (element) => element.locale!.endsWith('ar'),
-                          orElse: () => TranslationsCity(),
-                        )
-                            .title ??
+                                .firstWhere(
+                                  (element) => element.locale!.endsWith('ar'),
+                                  orElse: () => TranslationsCity(),
+                                )
+                                .title ??
                             ' de',
                         style: GoogleFonts.cairo(
-                          textStyle: TextStyles.font13DarkBlueRegular,),
+                          textStyle: TextStyles.font13DarkBlueRegular,
+                        ),
                       ),
                       value: selectedCity ==
                           city.translations!
@@ -701,9 +762,9 @@ class _OffersState extends State<Offers> {
                       onChanged: (bool? value) {
                         selectedCity = (value!
                             ? city.translations!
-                            .firstWhere(
-                                (element) => element.locale!.endsWith('ar'))
-                            .title
+                                .firstWhere(
+                                    (element) => element.locale!.endsWith('ar'))
+                                .title
                             : '')!;
                         Navigator.of(context).pop();
                         if (value == true) {
@@ -966,7 +1027,6 @@ class _OffersState extends State<Offers> {
   //     );
   //   }
   // }
-
 }
 //        body: BlocBuilder<OffersCubit, OfferState>(
 //           builder: (context, state) {

@@ -7,6 +7,8 @@ import 'package:all_one/features/home/logic/ads_cubit/ads_cubit.dart';
 import 'package:all_one/features/home/logic/home_cubit.dart';
 import 'package:all_one/features/home/logic/product_cuibt/product_cuibt_cubit.dart';
 import 'package:all_one/features/notification/data/repo/notaification_data.dart';
+import 'package:all_one/features/offers/data/repo/offer_repo.dart';
+import 'package:all_one/features/offers/logic/offers_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,7 @@ import 'core/routing/routes.dart';
 import 'core/theming/colors.dart';
 import 'features/home/data/repo/repo_types.dart';
 import 'features/notification/logic/notification_cubit.dart';
+import 'features/offers/ui/widgets/test.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.appRouter});
@@ -34,6 +37,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => HomeCubit(TypesRepo(ApiService(Dio())))..fetchTypes()),
         BlocProvider(create: (context) => AdsCubit(RepoAds(ApiService(Dio())))..fetchAds()),
         BlocProvider(create: (context) => NotificationCubit(NoteRepo(ApiService(Dio())))..fetchNote()),
+        BlocProvider(create: (context) => OffersCubit(OfferRepo(ApiService(Dio())),ProductRepo(ApiService(Dio())))..fetchData()..fetchCountry()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
@@ -42,11 +46,12 @@ class MyApp extends StatelessWidget {
           locale: controller.initLang,
           translations: MyLocale(),
           debugShowCheckedModeBanner: false,
-          title: "All One",
+          title: "Sly Deals",
           theme: ThemeData(
               primaryColor: ColorsManager.mainMauve
           ),
 
+          // home: OffersScreenTest(),
           initialRoute: Routes.homeScreen,
           onGenerateRoute: appRouter.generateRoute,
           onUnknownRoute: appRouter.generateRoute,

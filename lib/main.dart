@@ -26,35 +26,3 @@ void main() async {
   ) );
 }
 
-//  final GoogleMapsFlutterPlatform mapsImplementation =
-//       GoogleMapsFlutterPlatform.instance;
-//   if (mapsImplementation is GoogleMapsFlutterAndroid) {
-//     // Force Hybrid Composition mode.
-//     mapsImplementation.useAndroidViewSurface = true;
-//   }
-//
-//   Completer<AndroidMapRenderer?>? _initializedRendererCompleter;
-//   Future<AndroidMapRenderer?> initializeMapRenderer() async {
-//     if (_initializedRendererCompleter != null) {
-//       return _initializedRendererCompleter!.future;
-//     }
-//
-//     final Completer<AndroidMapRenderer?> completer =
-//     Completer<AndroidMapRenderer?>();
-//     _initializedRendererCompleter = completer;
-//
-//     WidgetsFlutterBinding.ensureInitialized();
-//
-//     final GoogleMapsFlutterPlatform mapsImplementation =
-//         GoogleMapsFlutterPlatform.instance;
-//     if (mapsImplementation is GoogleMapsFlutterAndroid) {
-//       unawaited(mapsImplementation
-//           .initializeWithRenderer(AndroidMapRenderer.latest)
-//           .then((AndroidMapRenderer initializedRenderer) =>
-//           completer.complete(initializedRenderer)));
-//     } else {
-//       completer.complete(null);
-//     }
-//
-//     return completer.future;
-//   }

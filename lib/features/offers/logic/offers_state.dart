@@ -11,9 +11,9 @@ class OfferLoadingState extends OfferState {}
 
 class OffersSuccess extends OfferState {
   final List<DataProduct> products;
-  final List<String> categories;
-  final List<Country> country;
-  OffersSuccess(this.products, this.categories, this.country);
+  // final List<String> categories;
+  // final List<Country> country;
+  OffersSuccess(this.products,);
 }
 class OfferLoadedStateTypes extends OfferState {
 }

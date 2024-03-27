@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../../../core/helper/chache_helper.dart';
 import '../../../core/sql/sql_data.dart';
@@ -52,32 +54,189 @@ class OffersCubit extends Cubit<OfferState> {
   List<LocaleModelProduct> listLocal = [];
   int _currentPage = 1;
   final int _limit = 10;
-  void fetchTypes() async {
-    emit(OfferLoadingState());
+  // void fetchTypes() async {
+  //   emit(OfferLoadingState());
+  //
+  //   try {
+  //     final productResponse = await offerRepo.getProduct(page: _currentPage, limit: _limit);
+  //     final countryResponse = await offerRepo.getCountry();
+  //
+  //     // Assuming these responses are processed correctly and you have product and country data
+  //     allProducts = productResponse.data!.data!;
+  //     countryList = countryResponse.country;
+  //
+  //     // Initially display all products without any filter
+  //     updateDisplayedProducts();
+  //   } catch (error) {
+  //     emit(OfferLoadedStateTypes());
+  //   }
+  // }
+  // void updateDisplayedProducts({
+  //   String? selectedCountry,
+  //   String? selectedCity,
+  //   List<String>? selectedCategories,
+  //   String? searchText,
+  // }) async {
+  //   var tempProducts = List<DataProduct>.from(allProducts); // Ensure you work with a copy of allProducts
+  //
+  //   // Apply filters only if they are not null and not empty
+  //   if (selectedCountry != null && selectedCountry.isNotEmpty) {
+  //     List<City> countryCities = country!.country
+  //         .firstWhere((country) =>
+  //     country.translations!
+  //         .firstWhere((element) => element.locale!.endsWith('ar'))
+  //         .title ==
+  //         selectedCountry)
+  //         .city!;
+  //     tempProducts = countryCities.expand((city) => city.items!).toList();
+  //     selectedCountryCities.addAll(countryCities);
+  //   }
+  //
+  //   if (selectedCity != null && selectedCity.isNotEmpty) {
+  //     tempProducts = selectedCountryCities
+  //         .firstWhere((city) =>
+  //     city.translations!
+  //         .firstWhere((element) => element.locale!.endsWith('ar'))
+  //         .title ==
+  //         selectedCity)
+  //         .items!;
+  //
+  //   }
+  //
+  //   if (selectedCategories != null && selectedCategories.isNotEmpty) {
+  //     tempProducts = tempProducts.where((product) {
+  //       var translations = product.types?.translations;
+  //       if (translations != null && translations.isNotEmpty) {
+  //         var title = translations
+  //             .firstWhere(
+  //               (element) => element.locale!.endsWith(lang),
+  //           orElse: () =>
+  //               TranslationsData(), // Handle the case where no matching translation is found
+  //         )
+  //             ?.title;
+  //
+  //         return title != null && selectedCategories.contains(title);
+  //       }
+  //       return false;
+  //     }).toList();
+  //
+  //   }
+  //   if (searchText != null && searchText.isNotEmpty) {
+  //     tempProducts.retainWhere((product) => product.title?.toLowerCase().contains(searchText.toLowerCase()) ?? false);
+  //   }
+  //
+  //   // No need to await here since _fetchCategories can be made synchronous if it's processing local data
+  //   final categories = _fetchCategories(tempProducts);
+  //   final countries = countryList; // Assuming countryList is already populated
+  //
+  //   emit(OffersSuccess(tempProducts, categories, countries));
+  // }
+  // List<String> _fetchCategories(List<DataProduct> products) {
+  //     // Implement your logic to fetch categories based on products
+  //     // This is a simplified version
+  //     return products.map((product) => product.types?.translations?.firstWhere(
+  //           (translation) => translation.locale!.endsWith(lang),
+  //       orElse: () => TranslationsData(title: 'Unknown'),
+  //     ).title ?? 'Unknown'
+  //     ).toSet().toList();
+  //   }
 
+    // Future<List<String>> fetchCategories(List<DataProduct> products) async {
+  //   // Implement the logic to fetch categories based on products
+  //   // This is a placeholder for your actual fetchCategories implementation
+  //   return products.map((e) => e..types!.translations!
+  //       .firstWhere(
+  //         (element) => element.locale!
+  //         .endsWith(lang), // Provide a default empty title
+  //   )
+  //       .title).toSet().toList() as List<String>;
+  // }
+
+
+  Future<void> fetchData() async {
+    if (!hasMoreData) return; // Prevent fetching if no more data to load
     try {
-      final productResponse = await offerRepo.getProduct(page: _currentPage, limit: _limit);
-      final countryResponse = await offerRepo.getCountry();
+      isLoading = true;
 
-      // Assuming these responses are processed correctly and you have product and country data
-      allProducts = productResponse.data!.data!;
-      countryList = countryResponse.country;
 
-      // Initially display all products without any filter
-      updateDisplayedProducts();
-    } catch (error) {
-      emit(OfferLoadedStateTypes());
+      emit(OfferLoadingState());
+      
+      final response = await http.get(
+        Uri.tryParse('http://app.misrgidda.com/api/items?page=$currentPage&limit=$itemsPerPage')!,
+      );
+
+      if (response.statusCode == 200) {
+        var result = jsonDecode(response.body);
+        var newProducts = ProductOffers.fromJson(result).data!.data!;
+
+        if (newProducts!.isEmpty) {
+          hasMoreData = false; // No more data to load
+        } else {
+          allProducts.addAll(newProducts); // Append new products to the list
+          displayedProducts = allProducts;
+          updateDisplayedProducts(allProducts);
+          emit(OffersSuccess(displayedProducts));
+
+          currentPage++; // Increment the page number for the next request
+          for (DataProduct pro in allProducts) {
+            var title = pro.types!.translations!
+                .firstWhere(
+                  (element) => element.locale!
+                  .endsWith(lang), // Provide a default empty title
+            )
+                .title;
+
+            if (title != null && !categories.contains(title)) {
+              categories
+                  .add(title); // Add to the list only if not already present
+              print("///////////////////////////$title");
+            }
+            title = titleCategory;
+
+          }
+
+        }
+      } else {
+        hasMoreData = false; // Assume no more data to load on error
+      }
+    } catch (e) {
+      hasMoreData = false; // Assume no more data to load on exception
+      print('Error while getting data: $e');
+    } finally {
+      isLoading = false;
+
     }
-  }  void updateDisplayedProducts({
-    String? selectedCountry,
-    String? selectedCity,
-    List<String>? selectedCategories,
-    String? searchText,
-  }) async {
-    var tempProducts = List<DataProduct>.from(allProducts); // Ensure you work with a copy of allProducts
+  }
+  fetchCountry() async {
+    try {
+      http.Response response = await http
+          .get(Uri.tryParse('http://app.misrgidda.com/api/categories')!);
+      if (response.statusCode == 200) {
+        var result = jsonDecode(response.body);
+        // print(result);
 
-    // Apply filters only if they are not null and not empty
-    if (selectedCountry != null && selectedCountry.isNotEmpty) {
+        country = CountryApi.fromJson(result);
+        countryList = country!.country;
+        // dataCityItems = country.country.expand((element) => element.city.expand((element) => element.items));
+        // print(countryList[0].city![0].items![1].translations![0].title);
+        // if (product.data != null) {
+        //   // Continue processing data...
+        // } else {
+        //   print('Error: Data field is null');
+        // }
+      } else {
+        print('Error: ${response.statusCode}, ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error while getting data is $e');
+    } finally {}
+  }
+
+
+  void updateDisplayedProducts(allProducts) {
+    List<DataProduct> tempProducts = allProducts;
+
+    if (selectedCountry?.isNotEmpty == true) {
       List<City> countryCities = country!.country
           .firstWhere((country) =>
       country.translations!
@@ -89,7 +248,8 @@ class OffersCubit extends Cubit<OfferState> {
       selectedCountryCities.addAll(countryCities);
     }
 
-    if (selectedCity != null && selectedCity.isNotEmpty) {
+    // Further filter by selected city if a city is selected
+    if (selectedCity?.isNotEmpty == true) {
       tempProducts = selectedCountryCities
           .firstWhere((city) =>
       city.translations!
@@ -97,10 +257,15 @@ class OffersCubit extends Cubit<OfferState> {
           .title ==
           selectedCity)
           .items!;
-
     }
 
-    if (selectedCategories != null && selectedCategories.isNotEmpty) {
+    //tempProducts
+    //           .where((product) => product.types!
+    //               .((category) => selectedCategories.contains(category)))
+    //           .toList();
+
+    // Further filter by selected categories
+    if (selectedCategories.isNotEmpty) {
       tempProducts = tempProducts.where((product) {
         var translations = product.types?.translations;
         if (translations != null && translations.isNotEmpty) {
@@ -116,36 +281,21 @@ class OffersCubit extends Cubit<OfferState> {
         }
         return false;
       }).toList();
-
     }
-    if (searchText != null && searchText.isNotEmpty) {
-      tempProducts.retainWhere((product) => product.title?.toLowerCase().contains(searchText.toLowerCase()) ?? false);
+    // Apply search filter if search text is entered
+    if (searchController.text.isNotEmpty) {
+      tempProducts = tempProducts
+          .where((product) => product.title!
+          .toLowerCase()
+          .contains(searchController.text.toLowerCase()))
+          .toList();
     }
 
-    // No need to await here since _fetchCategories can be made synchronous if it's processing local data
-    final categories = _fetchCategories(tempProducts);
-    final countries = countryList; // Assuming countryList is already populated
+    displayedProducts = tempProducts;
+    
+    emit(OffersSuccess(displayedProducts));
 
-    emit(OffersSuccess(tempProducts, categories, countries));
   }
-  List<String> _fetchCategories(List<DataProduct> products) {
-      // Implement your logic to fetch categories based on products
-      // This is a simplified version
-      return products.map((product) => product.types?.translations?.firstWhere(
-            (translation) => translation.locale!.endsWith(lang),
-        orElse: () => TranslationsData(title: 'Unknown'),
-      ).title ?? 'Unknown'
-      ).toSet().toList();
-    }
 
-    // Future<List<String>> fetchCategories(List<DataProduct> products) async {
-  //   // Implement the logic to fetch categories based on products
-  //   // This is a placeholder for your actual fetchCategories implementation
-  //   return products.map((e) => e..types!.translations!
-  //       .firstWhere(
-  //         (element) => element.locale!
-  //         .endsWith(lang), // Provide a default empty title
-  //   )
-  //       .title).toSet().toList() as List<String>;
-  // }
+
 }
